@@ -4,7 +4,7 @@ require __DIR__ . '/route/job.php';
 require __DIR__ . '/route/profile.php';
 require __DIR__ . '/route/source.php';
 
-class Rimindapi
+class Riminder
 {
   public $DEFAULT_HOST = "https://www.riminder.net/sf/public/api/";
   public $DEFAULT_HOST_BASE = "v1.0/";
@@ -23,9 +23,9 @@ class Rimindapi
       return json_decode($data, TRUE);
     });
 
-    $this->job      = new RimindapiJob($this);
-    $this->profile  = new RimindapiProfile($this);
-    $this->source   = new RimindapiSource($this);
+    $this->job      = new RiminderJob($this);
+    $this->profile  = new RiminderProfile($this);
+    $this->source   = new RiminderSource($this);
   }
 
   public function setRestHost($host) {

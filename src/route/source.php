@@ -1,18 +1,18 @@
 <?php
 
-  class RimindapiSource
+  class RiminderSource
   {
     public function __construct($parent) {
-      $this->rimindapi = $parent;
+      $this->riminder = $parent;
     }
 
     public function getSources() {
-      $resp = $this->rimindapi->_rest->get("sources");
+      $resp = $this->riminder->_rest->get("sources");
       return $resp->decode_response();
     }
 
     public function get($source_id) {
-      $resp = $this->rimindapi->_rest->get("source/$source_id");
+      $resp = $this->riminder->_rest->get("source/$source_id");
       return $resp->decode_response();
     }
   }

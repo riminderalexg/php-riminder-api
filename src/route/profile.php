@@ -1,24 +1,37 @@
 <?php
 
-  class RimindapiProfile
+  class RiminderProfile
   {
     public function __construct($parent) {
-      $this->rimindapi = $parent;
+      $this->riminder = $parent;
     }
 
-    public function getProfiles($source_ids, $date_start, $date_end, $page, $limit = null, $sort_by = null, $seniority = null, $job_id = null, $stage = null) {
+    public function getProfiles($source_ids, $date_start, $date_end, $page = null, $limit = null, $sort_by = null, $seniority = null, $job_id = null, $stage = null) {
       $query = array (
         'source_ids'  => $source_ids,
-        'seniority'   => $seniority,
-        'job_id'      => $job_id,
-        'stage'       => $stage,
         'date_start'  => $date_start,
         'date_end'    => $date_end,
-        'page'        => $page,
-        'limit'       => $limit,
-        'sort_by'     => $sort_by
       );
-      $resp = $this->rimindapi->_rest->get("profiles", $query);
+      if ($page != null) {
+        $query['page'] = $page;
+      }
+      if ($seniority != null) {
+        $query['seniority'] = $seniority;
+      }
+      if ($job_id != null) {
+        $query['job_id'] = $job_id;
+      }
+      if ($stage != null) {
+        $query['stage'] = $stage;
+      }
+      if ($limit != null) {
+        $query['limit'] = $limit;
+      }
+      if ($sort_by != null) {
+        $query['sort_by'] = $sort_by;
+      }
+      //var_dump($query);
+      $resp = $this->riminder->_rest->get("profiles", $query);
       return $resp->decode_response();
     }
 
@@ -29,29 +42,29 @@
         'profile_reference'   => $profile_reference,
         'timestamp_reception' => $timestamp_reception
       );
-      $resp = $this->rimindapi->_rest->post("profile", $bodyParams);
+      $resp = $this->riminder->_rest->post("profile", $bodyParams);
       return $resp->decode_response();
     }
 
     public function get($profile_id) {
 
-      $resp = $this->rimindapi->_rest->get("profile/$profile_id");
+      $resp = $this->riminder->_rest->get("profile/$profile_id");
       return $resp->decode_response();
     }
 
     public function getDocuments($profile_id) {
 
-      $resp = $this->rimindapi->_rest->get("profile/$profile_id/documents");
+      $resp = $this->riminder->_rest->get("profile/$profile_id/documents");
       return $resp->decode_response();
     }
 
     public function getExtractions($profile_id) {
-      $resp = $this->rimindapi->_rest->get("profile/$profile_id/extractions");
+      $resp = $this->riminder->_rest->get("profile/$profile_id/extractions");
       return $resp->decode_response();
     }
 
     public function getJobs($profile_id) {
-      $resp = $this->rimindapi->_rest->get("profile/$profile_id/jobs");
+      $resp = $this->riminder->_rest->get("profile/$profile_id/jobs");
       return $resp->decode_response();
     }
 
@@ -60,7 +73,7 @@
         'job_id' => $job_id,
         'stage'  => $stage
       );
-      $resp = $this->rimindapi->_rest->get("profile/$profile_id/stage");
+      $resp = $this->riminder->_rest->get("profile/$profile_id/stage");
       return $resp->decode_response();
     }
 
@@ -69,7 +82,7 @@
         'job_id' => $job_id,
         'stage'  => $rating
       );
-      $resp = $this->rimindapi->_rest->get("profile/$profile_id/rating");
+      $resp = $this->riminder->_rest->get("profile/$profile_id/rating");
       return $resp->decode_response();
     }
 

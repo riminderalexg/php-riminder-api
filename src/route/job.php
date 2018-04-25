@@ -1,18 +1,18 @@
 <?php
 
-  class RimindapiJob
+  class RiminderJob
   {
     public function __construct($parent) {
-      $this->rimindapi = $parent;
+      $this->riminder = $parent;
     }
 
     public function getJobs() {
-      $resp = $this->rimindapi->_rest->get("jobs");
+      $resp = $this->riminder->_rest->get("jobs");
       return $resp->decode_response();
     }
 
     public function get($job_id) {
-      $resp = $this->rimindapi->_rest->get("job/$job_id");
+      $resp = $this->riminder->_rest->get("job/$job_id");
       return $resp->decode_response();
     }
   }

@@ -1,7 +1,5 @@
 <?php
 
-namespace riminder\rimindapi;
-
 require __DIR__ . '/route/job.php';
 require __DIR__ . '/route/profile.php';
 require __DIR__ . '/route/source.php';
@@ -11,12 +9,13 @@ class Rimindapi
   public $DEFAULT_HOST = "https://www.riminder.net/sf/public/api/";
   public $DEFAULT_HOST_BASE = "v1.0/";
 
-  public function __construct() {
+  public function __construct($apiSecret) {
     $this->auth = array();
 
     $this->_rest = new RestClient(array(
-      "base_url"     => $this->DEFAULT_REST_HOST . $this->DEFAULT_REST_BASE_PATH,
-      "headers"      => ["Content-Type" => "application/json"],
+      "base_url"     => $this->DEFAULT_HOST . $this->DEFAULT_HOST_BASE,
+      "headers"      => ["Content-Type" => "application/json",
+                        "X-API-KEY"     => $apiSecret],
       "content_type" => "application/json"
     ));
 
@@ -31,10 +30,6 @@ class Rimindapi
 
   public function setRestHost($host) {
     $this->_rest->set_option('base_url', $host);
-  }
-  public function authenticate($identifier, $key) {
-    $this->_rest->set_option('username', $identifier);
-    $this->_rest->set_option('password', $key);
   }
 }
 ?>

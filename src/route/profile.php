@@ -1,10 +1,8 @@
 <?php
 
-  namespace riminder\rimindapi\route;
-
   class RimindapiProfile
   {
-    public function _construct($parent) {
+    public function __construct($parent) {
       $this->rimindapi = $parent;
     }
 

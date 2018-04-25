@@ -14,8 +14,7 @@
         }
     ],
     "minimum-stability": "dev",
-    "psr-4": {
-        "riminder\\rimindapi\\": "src/",
-        "riminder\\rimindapi\\route\\": "src/route"
+    "autoload": {
+      "files": ["src/Rimindapi.php"]
     }
 }

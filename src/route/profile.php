@@ -6,9 +6,22 @@
       $this->riminder = $parent;
     }
 
-    public function getProfiles($source_ids, $date_start, $date_end, $page = null, $limit = null, $sort_by = null, $seniority = null, $job_id = null, $stage = null) {
+    public function serializeSourceIds($source_ids) {
+      $res = "";
+      $i = 0;
+      foreach ($source_ids as $source_id) {
+        $res = $res . $source_id;
+        if (++$i !== count($source_ids)) {
+          $res = $res . ',';
+        }
+      }
+      return($res);
+    }
+    public function getProfiles($source_ids, $date_start, $date_end, $page = 1, $limit = null, $sort_by = null, $seniority = null, $job_id = null, $stage = null) {
+
+
       $query = array (
-        'source_ids'  => $source_ids,
+        'source_ids'  => $this->serializeSourceIds($source_ids),
         'date_start'  => $date_start,
         'date_end'    => $date_end,
       );
@@ -46,25 +59,35 @@
       return $resp->decode_response();
     }
 
-    public function get($profile_id) {
-
-      $resp = $this->riminder->_rest->get("profile/$profile_id");
+    public function get($profile_id, $source_id) {
+      $query = array(
+        'source_id' => $source_id
+      );
+      $resp = $this->riminder->_rest->get("profile/$profile_id", $source_id);
       return $resp->decode_response();
     }
 
-    public function getDocuments($profile_id) {
-
-      $resp = $this->riminder->_rest->get("profile/$profile_id/documents");
+    public function getDocuments($profile_id, $source_id) {
+      $query = array(
+        'source_id' => $source_id
+      );
+      $resp = $this->riminder->_rest->get("profile/$profile_id/documents", $source_id);
       return $resp->decode_response();
     }
 
-    public function getExtractions($profile_id) {
-      $resp = $this->riminder->_rest->get("profile/$profile_id/extractions");
+    public function getExtractions($profile_id, $source_id) {
+      $query = array(
+        'source_id' => $source_id
+      );
+      $resp = $this->riminder->_rest->get("profile/$profile_id/extractions", $source_id);
       return $resp->decode_response();
     }
 
-    public function getJobs($profile_id) {
-      $resp = $this->riminder->_rest->get("profile/$profile_id/jobs");
+    public function getJobs($profile_id, $source_id) {
+      $query = array(
+        'source_id' => $source_id
+      );
+      $resp = $this->riminder->_rest->get("profile/$profile_id/jobs", $source_id);
       return $resp->decode_response();
     }
 

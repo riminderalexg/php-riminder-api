@@ -8,15 +8,17 @@ class Riminder
 {
   public $DEFAULT_HOST = "https://www.riminder.net/sf/public/api/";
   public $DEFAULT_HOST_BASE = "v1.0/";
+  //
+  // public $DEFAULT_HOST = "http://localhost:4242";
+  // public $DEFAULT_HOST_BASE = "";
 
   public function __construct($apiSecret) {
     $this->auth = array();
 
     $this->_rest = new RestClient(array(
       "base_url"     => $this->DEFAULT_HOST . $this->DEFAULT_HOST_BASE,
-      "headers"      => ["Content-Type" => "application/json",
+      "headers"      => [
                         "X-API-KEY"     => $apiSecret],
-      "content_type" => "application/json"
     ));
 
     $this->_rest->register_decoder("json", function($data) {

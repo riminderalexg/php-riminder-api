@@ -63,7 +63,7 @@
       $query = array(
         'source_id' => $source_id
       );
-      $resp = $this->riminder->_rest->get("profile/$profile_id", $source_id);
+      $resp = $this->riminder->_rest->get("profile/$profile_id", $query);
       return $resp->decode_response();
     }
 
@@ -71,7 +71,7 @@
       $query = array(
         'source_id' => $source_id
       );
-      $resp = $this->riminder->_rest->get("profile/$profile_id/documents", $source_id);
+      $resp = $this->riminder->_rest->get("profile/$profile_id/documents", $query);
       return $resp->decode_response();
     }
 
@@ -79,7 +79,7 @@
       $query = array(
         'source_id' => $source_id
       );
-      $resp = $this->riminder->_rest->get("profile/$profile_id/extractions", $source_id);
+      $resp = $this->riminder->_rest->get("profile/$profile_id/extractions", $query);
       return $resp->decode_response();
     }
 
@@ -87,7 +87,7 @@
       $query = array(
         'source_id' => $source_id
       );
-      $resp = $this->riminder->_rest->get("profile/$profile_id/jobs", $source_id);
+      $resp = $this->riminder->_rest->get("profile/$profile_id/jobs", $query);
       return $resp->decode_response();
     }
 

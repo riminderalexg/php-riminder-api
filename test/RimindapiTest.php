@@ -8,6 +8,7 @@
   final class RiminderTest extends TestCase {
 
     public $APISECRET = "ask_ce813e1812ebeb663489abdad8b13aea";
+    // public $APISECRET = 'ask_9322c036347fd33a3b23fec1e94fb1a8';
     public $gSource_id = "";
     public $gprofile_id = "";
 
@@ -118,12 +119,11 @@
     //     $sort_by = "RANKING";
     //
     //     $srcResp = $api->source->getSources();
-    //     for ($i = 0; $i < 5; $i++){
-    //       if (count($srcResp["data"]) <= $i) {
-    //         break;
-    //       }
-    //       $source_ids[] = $srcResp['data'][0]['source_id'];
-    //     }
+    // for ($i = 0; $i < count($srcResp["data"]); $i++){
+    //   if ($srcResp['data'][$i]['type'] == 'folder' || $srcResp['data'][$i]['type'] === 'link') {
+    //     $source_ids[] = $srcResp['data'][$i]['source_id'];
+    //   }
+    // }
     //     // var_dump($source_ids);
     //     $jobResp = $api->job->getJobs();
     //     if (count($jobResp['data']) > 0) {
@@ -166,55 +166,61 @@
     //
     // }
     //
-    public function testProfileGet(): void {
-        $api = new Riminder($this->APISECRET);
-        $start =  new DateTime('2017-01-02');
-        $end =  new DateTime();
-        $source_ids = array();
-
-        $srcResp = $api->source->getSources();
-        print("\nGET /sources:\n");
-        var_dump($srcResp);
-        print("\n-------------------------------------------------\n");
-        for ($i = 0; $i < 2; $i++){
-          if (count($srcResp["data"]) <= $i) {
-            break;
-          }
-          $source_ids[] = $srcResp['data'][$i]['source_id'];
-        }
-        print("Selected source ids:\n");
-        var_dump($source_ids);
-        print("\n-------------------------------------------------\n");
-        $respTmp = $api->profile->getProfiles($source_ids, $start->getTimestamp(), $end->getTimestamp(), 1, 5);
-        print("\nGET /profiles result:\n");
-        var_dump($respTmp);
-        print("\n-------------------------------------------------\n");
-        if (count($respTmp['data']['profiles']) > 0) {
-          $profile_id = $respTmp['data']['profiles'][0]['profile_id'];
-          print("Selected profile id: \'$profile_id\'\n");
-          $resp = $api->profile->get($profile_id);
-          print("GET /profile result\n");
-          var_dump($resp);
-          $this->assertArrayHasKey('code', $resp);
-          $this->assertArrayHasKey('message', $resp);
-          $this->assertArrayHasKey('data', $resp);
-          $this->assertArrayHasKey('profile_id', $resp['data']);
-          $this->assertArrayHasKey('profile_reference', $resp['data']);
-          $this->assertArrayHasKey('name', $resp['data']);
-          $this->assertArrayHasKey('email', $resp['data']);
-          $this->assertArrayHasKey('phone', $resp['data']);
-          $this->assertArrayHasKey('address', $resp['data']);
-          $this->assertArrayHasKey('source_id', $resp['data']);
-          $this->assertArrayHasKey('date_reception', $resp['data']);
-          $this->assertArrayHasKey('date', $resp['data']['date_reception']);
-          $this->assertArrayHasKey('timezone_type', $resp['data']['date_reception']);
-          $this->assertArrayHasKey('timezone', $resp['data']['date_reception']);
-          $this->assertArrayHasKey('date_creation', $resp['data']);
-          $this->assertArrayHasKey('date', $resp['data']['date_creation']);
-          $this->assertArrayHasKey('timezone_type', $resp['data']['date_creation']);
-          $this->assertArrayHasKey('timezone', $resp['data']['date_creation']);
-      }
-    }
+    // public function testProfileGet(): void {
+    //     $api = new Riminder($this->APISECRET);
+    //     $start =  new DateTime('2017-01-02');
+    //     $end =  new DateTime();
+    //     $source_ids = array();
+    //
+    //     $srcResp = $api->source->getSources();
+    //     print("\nGET /sources:\n");
+    //     var_dump($srcResp);
+    //     print("\n-------------------------------------------------\n");
+    //     for ($i = 0; $i < count($srcResp["data"]); $i++){
+    //       if ($srcResp['data'][$i]['type'] == 'folder' || $srcResp['data'][$i]['type'] === 'link') {
+    //         $source_ids[] = $srcResp['data'][$i]['source_id'];
+    //       }
+    //     }
+    //     print("Selected source ids:\n");
+    //     var_dump($source_ids);
+    //     print("\n-------------------------------------------------\n");
+    //     $respTmp = $api->profile->getProfiles($source_ids, $start->getTimestamp(), $end->getTimestamp(), 1, 1000);
+    //     print("\nGET /profiles result:\n");
+    //     var_dump($respTmp);
+    //     print("\n-------------------------------------------------\n");
+    //     if (count($respTmp['data']['profiles']) > 0) {
+    //       for ($i = 0; $i < count($respTmp['data']['profiles']); $i++) {
+    //         $profile_id = $respTmp['data']['profiles'][$i]['profile_id'];
+    //         $source_id = $respTmp['data']['profiles'][$i]['source']['source_id'];
+    //         print("Selected profile id:'$profile_id'\n");
+    //         print("Selected source id: '$source_id'\n");
+    //         $resp = $api->profile->get($profile_id, $source_id);
+    //         print("GET /profile result\n");
+    //         var_dump($resp);
+    //         if (array_key_exists('data', $resp)) {
+    //           break;
+    //         }
+    //       }
+    //       $this->assertArrayHasKey('code', $resp);
+    //       $this->assertArrayHasKey('message', $resp);
+    //       $this->assertArrayHasKey('data', $resp);
+    //       $this->assertArrayHasKey('profile_id', $resp['data']);
+    //       $this->assertArrayHasKey('profile_reference', $resp['data']);
+    //       $this->assertArrayHasKey('name', $resp['data']);
+    //       $this->assertArrayHasKey('email', $resp['data']);
+    //       $this->assertArrayHasKey('phone', $resp['data']);
+    //       $this->assertArrayHasKey('address', $resp['data']);
+    //       $this->assertArrayHasKey('source_id', $resp['data']);
+    //       $this->assertArrayHasKey('date_reception', $resp['data']);
+    //       $this->assertArrayHasKey('date', $resp['data']['date_reception']);
+    //       $this->assertArrayHasKey('timezone_type', $resp['data']['date_reception']);
+    //       $this->assertArrayHasKey('timezone', $resp['data']['date_reception']);
+    //       $this->assertArrayHasKey('date_creation', $resp['data']);
+    //       $this->assertArrayHasKey('date', $resp['data']['date_creation']);
+    //       $this->assertArrayHasKey('timezone_type', $resp['data']['date_creation']);
+    //       $this->assertArrayHasKey('timezone', $resp['data']['date_creation']);
+    //   }
+    // }
     //
     // public function testProfileGetDocuments(): void {
     //     $api = new Riminder($this->APISECRET);
@@ -223,28 +229,38 @@
     //     $source_ids = array();
     //
     //     $srcResp = $api->source->getSources();
-    //     for ($i = 0; $i < 2; $i++){
-    //       if (count($srcResp["data"]) <= $i) {
-    //         break;
+    //     for ($i = 0; $i < count($srcResp["data"]); $i++){
+    //       if ($srcResp['data'][$i]['type'] == 'folder' || $srcResp['data'][$i]['type'] === 'link') {
+    //         $source_ids[] = $srcResp['data'][$i]['source_id'];
     //       }
-    //       $source_ids[] = $srcResp['data'][0]['source_id'];
     //     }
     //     $respTmp = $api->profile->getProfiles($source_ids, $start->getTimestamp(), $end->getTimestamp(), 1);
     //
     //     if (count($respTmp['data']['profiles']) > 0) {
-    //       $profile_id = $respTmp['data']['profiles'][0]['profile_id'];
-    //       $resp = $api->profile->getDocuments($profile_id);
-    //       var_dump($resp);
+    //       for ($i = 0; $i < count($respTmp['data']['profiles']); $i++) {
+    //         $profile_id = $respTmp['data']['profiles'][$i]['profile_id'];
+    //         $source_id = $respTmp['data']['profiles'][$i]['source']['source_id'];
+    //         print("Selected profile id:'$profile_id'\n");
+    //         print("Selected source id: '$source_id'\n");
+    //         $resp = $api->profile->getDocuments($profile_id, $source_id);
+    //         print("GET /profile/id/documents result\n");
+    //         var_dump($resp);
+    //         if (array_key_exists('data', $resp)) {
+    //           break;
+    //         }
+    //       }
     //       $this->assertArrayHasKey('code', $resp);
     //       $this->assertArrayHasKey('message', $resp);
     //       $this->assertArrayHasKey('data', $resp);
-    //       $this->assertArrayHasKey('type', $resp['data']);
-    //       $this->assertArrayHasKey('file_name', $resp['data']);
-    //       $this->assertArrayHasKey('original_file_name', $resp['data']);
-    //       $this->assertArrayHasKey('file_size', $resp['data']);
-    //       $this->assertArrayHasKey('extension', $resp['data']);
-    //       $this->assertArrayHasKey('url', $resp['data']);
-    //       $this->assertArrayHasKey('timestamp', $resp['data']);
+    //        if (count($resp['data']) > 0) {
+    //         $this->assertArrayHasKey('type', $resp['data'][0]);
+    //         $this->assertArrayHasKey('file_name', $resp['data'][0]);
+    //         $this->assertArrayHasKey('original_file_name', $resp['data'][0]);
+    //         $this->assertArrayHasKey('file_size', $resp['data'][0]);
+    //         $this->assertArrayHasKey('extension', $resp['data'][0]);
+    //         $this->assertArrayHasKey('url', $resp['data'][0]);
+    //         $this->assertArrayHasKey('timestamp', $resp['data'][0]);
+    //     }
     //   }
     // }
     //
@@ -255,19 +271,26 @@
     //     $source_ids = array();
     //
     //     $srcResp = $api->source->getSources();
-    //     for ($i = 0; $i < 2; $i++){
-    //       if (count($srcResp["data"]) <= $i) {
-    //         break;
+    //     for ($i = 0; $i < count($srcResp["data"]); $i++){
+    //       if ($srcResp['data'][$i]['type'] == 'folder' || $srcResp['data'][$i]['type'] === 'link') {
+    //         $source_ids[] = $srcResp['data'][$i]['source_id'];
     //       }
-    //       $source_ids[] = $srcResp['data'][0]['source_id'];
     //     }
     //     $respTmp = $api->profile->getProfiles($source_ids, $start->getTimestamp(), $end->getTimestamp(), 1);
     //
     //     if (count($respTmp['data']['profiles']) > 0) {
-    //       $profile_id = $respTmp['data']['profiles'][0]['profile_id'];
-    //       $resp = $api->profile->getExtractions($profile_id);
-    //
-    //       var_dump($resp);
+    //       for ($i = 0; $i < count($respTmp['data']['profiles']); $i++) {
+    //         $profile_id = $respTmp['data']['profiles'][$i]['profile_id'];
+    //         $source_id = $respTmp['data']['profiles'][$i]['source']['source_id'];
+    //         print("Selected profile id:'$profile_id'\n");
+    //         print("Selected source id: '$source_id'\n");
+    //         $resp = $api->profile->getExtractions($profile_id, $source_id);
+    //         print("GET /profile result\n");
+    //         var_dump($resp);
+    //         if (array_key_exists('data', $resp)) {
+    //           break;
+    //         }
+    //       }
     //       $this->assertArrayHasKey('code', $resp);
     //       $this->assertArrayHasKey('message', $resp);
     //       $this->assertArrayHasKey('data', $resp);
@@ -276,13 +299,13 @@
     //       $this->assertArrayHasKey('languages', $resp['data']);
     //       $this->assertArrayHasKey('seniority', $resp['data']);
     //       $this->assertArrayHasKey('experiences', $resp['data']);
-    //       if (count($resp['data']['experiences'] > 0)) {
-    //         $this->assertArrayHasKey('title', $resp['data']['experiences']);
-    //         $this->assertArrayHasKey('description', $resp['data']['experiences']);
-    //         $this->assertArrayHasKey('company', $resp['data']['experiences']);
-    //         $this->assertArrayHasKey('location', $resp['data']['experiences']);
-    //         $this->assertArrayHasKey('start_date', $resp['data']['experiences']);
-    //         $this->assertArrayHasKey('end_date', $resp['data']['experiences']);
+    //       if (count($resp['data']['experiences']) > 0) {
+    //         $this->assertArrayHasKey('title', $resp['data']['experiences'][0]);
+    //         $this->assertArrayHasKey('description', $resp['data']['experiences'][0]);
+    //         $this->assertArrayHasKey('company', $resp['data']['experiences'][0]);
+    //         $this->assertArrayHasKey('location', $resp['data']['experiences'][0]);
+    //         $this->assertArrayHasKey('start_date', $resp['data']['experiences'][0]);
+    //         $this->assertArrayHasKey('end_date', $resp['data']['experiences'][0]);
     //       }
     //   }
     // }
@@ -294,101 +317,124 @@
     //     $source_ids = array();
     //
     //     $srcResp = $api->source->getSources();
-    //     for ($i = 0; $i < 2; $i++){
-    //       if (count($srcResp["data"]) <= $i) {
-    //         break;
+    //     for ($i = 0; $i < count($srcResp["data"]); $i++){
+    //       if ($srcResp['data'][$i]['type'] == 'folder' || $srcResp['data'][$i]['type'] === 'link') {
+    //         $source_ids[] = $srcResp['data'][$i]['source_id'];
     //       }
-    //       $source_ids[] = $srcResp['data'][0]['source_id'];
     //     }
     //     $respTmp = $api->profile->getProfiles($source_ids, $start->getTimestamp(), $end->getTimestamp(), 1);
     //
     //     var_dump($respTmp);
     //     if (count($respTmp['data']['profiles']) > 0) {
-    //       $profile_id = $respTmp['data']['profiles'][0]['profile_id'];
-    //       $resp = $api->profile->getJobs($profile_id);
-    //
-    //
+    //       for ($i = 0; $i < count($respTmp['data']['profiles']); $i++) {
+    //         $profile_id = $respTmp['data']['profiles'][$i]['profile_id'];
+    //         $source_id = $respTmp['data']['profiles'][$i]['source']['source_id'];
+    //         print("Selected profile id:'$profile_id'\n");
+    //         print("Selected source id: '$source_id'\n");
+    //         $resp = $api->profile->getJobs($profile_id, $source_id);
+    //         print("GET /profile result\n");
+    //         var_dump($resp);
+    //         if (array_key_exists('data', $resp)) {
+    //           break;
+    //         }
+    //       }
     //       $this->assertArrayHasKey('code', $resp);
     //       $this->assertArrayHasKey('message', $resp);
     //       $this->assertArrayHasKey('data', $resp);
-    //       if (count($resp['data'] > 0)) {
-    //         $this->assertArrayHasKey('job_id', $resp['data']);
-    //         $this->assertArrayHasKey('job_reference', $resp['data']);
-    //         $this->assertArrayHasKey('name', $resp['data']);
-    //         $this->assertArrayHasKey('score', $resp['data']);
-    //         $this->assertArrayHasKey('rating', $resp['data']);
-    //         $this->assertArrayHasKey('stage', $resp['data']);
+    //       if (count($resp['data']) > 0) {
+    //         $this->assertArrayHasKey('job_id', $resp['data'][0]);
+    //         $this->assertArrayHasKey('job_reference', $resp['data'][0]);
+    //         $this->assertArrayHasKey('name', $resp['data'][0]);
+    //         $this->assertArrayHasKey('score', $resp['data'][0]);
+    //         $this->assertArrayHasKey('rating', $resp['data'][0]);
+    //         $this->assertArrayHasKey('stage', $resp['data'][0]);
     //       }
     //   }
     // }
 
-    // public function testProfileAdd(): void {
-    //   $api = new Riminder($this->APISECRET);
-    //   $now =  new DateTime();
-    //   $source_id = "";
-    //   $file = file_get_contents("./test/testFile.pdf");
-    //   $profile_ref = strval(rand(0, 99999));
-    //
-    //   $srcResp = $api->source->getSources();
-    //   var_dump($srcResp);
-    //   if ($srcResp["data"] > 0){
-    //     $source_id = $srcResp['data'][0]['source_id'];
-    //   }
-    //   $resp = $api->profile->add($source_id, $file, $profile_ref, $now->getTimestamp());
-    //   var_dump($resp);
-    //
-    // }
-    //
-    // public function testProfileUpdateStage(): void {
-    //   $api = new Riminder($this->APISECRET);
-    //   $stage = "YES";
-    //
-    //   $respJob = $api->profile->getJobs($gprofile_id);
-    //   if (count($respJob['data'] > 0)) {
-    //     $job_id = $respJob['data'][0]['job_id'];
-    //
-    //     $resp = $api->updateStage($gprofile_id, $job_id,$stage);
-    //
-    //     $this->assertArrayHasKey('code', $resp);
-    //     $this->assertArrayHasKey('message', $resp);
-    //     $this->assertArrayHasKey('data', $resp);
-    //
-    //     $this->assertArrayHasKey('profile_id', $resp['data']);
-    //     $this->assertArrayHasKey('profile_reference', $resp['data']);
-    //     $this->assertArrayHasKey('job_id', $resp['data']);
-    //     $this->assertArrayHasKey('job_reference', $resp['data']);
-    //     $this->assertArrayHasKey('stage', $resp['data']);
-    //
-    //     $this->assertEquals($gprofile_id, $resp['data']['profile_id']);
-    //     $this->assertEquals($job_id, $resp['data']['job_id']);
-    //     $this->assertEquals($stage, $resp['data']['stage']);
-    //   }
-    //
-    // }
-    // public function testProfileUpdateRating(): void {
-    //   $api = new Riminder($this->APISECRET);
-    //   $rating = 2;
-    //
-    //   $respJob = $api->profile->getJobs($gprofile_id);
-    //   if (count($respJob['data'] > 0)) {
-    //     $job_id = $respJob['data'][0]['job_id'];
-    //
-    //     $resp = $api->updateStage($gprofile_id, $job_id,$rating);
-    //
-    //     $this->assertArrayHasKey('code', $resp);
-    //     $this->assertArrayHasKey('message', $resp);
-    //     $this->assertArrayHasKey('data', $resp);
-    //
-    //     $this->assertArrayHasKey('profile_id', $resp['data']);
-    //     $this->assertArrayHasKey('profile_reference', $resp['data']);
-    //     $this->assertArrayHasKey('job_id', $resp['data']);
-    //     $this->assertArrayHasKey('job_reference', $resp['data']);
-    //     $this->assertArrayHasKey('stage', $resp['data']);
-    //
-    //     $this->assertEquals($gprofile_id, $resp['data']['profile_id']);
-    //     $this->assertEquals($job_id, $resp['data']['job_id']);
-    //     $this->assertEquals($rating, $resp['data']['stage']);
-    //   }
-    // }
+    public function testProfileAdd(): void {
+      $api = new Riminder($this->APISECRET);
+      $now =  new DateTime();
+      $source_id = "";
+      $file = file_get_contents("./test/testFile.pdf");
+      $profile_ref = strval(rand(0, 99999));
+
+      $srcResp = $api->source->getSources();
+      var_dump($srcResp);
+      for ($i = 0; $i < count($srcResp["data"]); $i++){
+        if ($srcResp['data'][$i]['type'] == 'api') {
+          $source_id = $srcResp['data'][$i]['source_id'];
+          break;
+        }
+      }
+      if ($source_id === "") {
+        $this->fail('no source with type = api... abort this test');
+        return;
+      }
+      $this->gSource_id = $source_id;
+      $resp = $api->profile->add($source_id, $file, $profile_ref, $now->getTimestamp());
+      var_dump($resp);
+
+    }
+
+    public function testProfileUpdateStage(): void {
+      $api = new Riminder($this->APISECRET);
+      $stage = "YES";
+
+      if ($this->gprofile_id == "") {
+        $this->fail('no profile previously created... abort this test');
+        return;
+      }
+      $respJob = $api->profile->getJobs($this->gprofile_id);
+      if (count($respJob['data'] > 0)) {
+        $job_id = $respJob['data'][0]['job_id'];
+
+        $resp = $api->updateStage($this->gprofile_id, $job_id,$stage);
+
+        $this->assertArrayHasKey('code', $resp);
+        $this->assertArrayHasKey('message', $resp);
+        $this->assertArrayHasKey('data', $resp);
+
+        $this->assertArrayHasKey('profile_id', $resp['data']);
+        $this->assertArrayHasKey('profile_reference', $resp['data']);
+        $this->assertArrayHasKey('job_id', $resp['data']);
+        $this->assertArrayHasKey('job_reference', $resp['data']);
+        $this->assertArrayHasKey('stage', $resp['data']);
+
+        $this->assertEquals($this->gprofile_id, $resp['data']['profile_id']);
+        $this->assertEquals($job_id, $resp['data']['job_id']);
+        $this->assertEquals($stage, $resp['data']['stage']);
+      }
+
+    }
+    public function testProfileUpdateRating(): void {
+      $api = new Riminder($this->APISECRET);
+      $rating = 2;
+
+      if ($this->gprofile_id == "") {
+        $this->fail('no profile previously created... abort this test');
+        return;
+      }
+      $respJob = $api->profile->getJobs($this->gprofile_id);
+      if (count($respJob['data'] > 0)) {
+        $job_id = $respJob['data'][0]['job_id'];
+
+        $resp = $api->updateStage($this->gprofile_id, $job_id,$rating);
+
+        $this->assertArrayHasKey('code', $resp);
+        $this->assertArrayHasKey('message', $resp);
+        $this->assertArrayHasKey('data', $resp);
+
+        $this->assertArrayHasKey('profile_id', $resp['data']);
+        $this->assertArrayHasKey('profile_reference', $resp['data']);
+        $this->assertArrayHasKey('job_id', $resp['data']);
+        $this->assertArrayHasKey('job_reference', $resp['data']);
+        $this->assertArrayHasKey('stage', $resp['data']);
+
+        $this->assertEquals($this->gprofile_id, $resp['data']['profile_id']);
+        $this->assertEquals($job_id, $resp['data']['job_id']);
+        $this->assertEquals($rating, $resp['data']['stage']);
+      }
+    }
   }
  ?>

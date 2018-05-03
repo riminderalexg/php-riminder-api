@@ -1,8 +1,8 @@
 <?php
 
-require __DIR__ . '/route/job.php';
-require __DIR__ . '/route/profile.php';
-require __DIR__ . '/route/source.php';
+require __DIR__ . '/ressources/job.php';
+require __DIR__ . '/ressources/profile.php';
+require __DIR__ . '/ressources/source.php';
 
 class Riminder
 {

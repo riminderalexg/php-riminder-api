@@ -19,24 +19,23 @@
       return($res);
     }
 
-    private static function dateToTimestamp($date) {
+    private static function argDateToTimestamp($date, $argName = 'arg') {
 
       if (is_int($date)){
         return $date;
       }
       if ($date != new DateTime()) {
-        throw new \RiminderApiException($date + "is not a valid date", 1);
+        throw new \RiminderApiArgumentException('date', $argName, 1);
       }
       return $date->getTimestamp();
     }
 
     public function getProfiles(array $source_ids, $date_start, $date_end, int $page = 1, int $limit = null, $sort_by = null, $seniority = null, $job_id = null, $stage = null) {
 
-
       $query = array (
         'source_ids'  => RiminderProfile::serializeSourceIds($source_ids),
-        'date_start'  => RiminderProfile::dateToTimestamp($date_start),
-        'date_end'    => RiminderProfile::dateToTimestamp($date_end),
+        'date_start'  => RiminderProfile::argDateToTimestamp($date_start, 'date_start'),
+        'date_end'    => RiminderProfile::argDateToTimestamp($date_end, 'date_end'),
       );
       if ($page != null) {
         $query['page'] = $page;
@@ -67,7 +66,7 @@
         'source_id'           => $source_id,
         'file'                => $file,
         'profile_reference'   => $profile_reference,
-        'timestamp_reception' => RiminderProfile::dateToTimestamp($reception_date)
+        'timestamp_reception' => RiminderProfile::argDateToTimestamp($reception_date, 'reception_date')
       );
       $resp = $this->riminder->_rest->post("profile", $bodyParams);
       ResponseChecker::check($resp);

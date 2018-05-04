@@ -103,19 +103,21 @@
       return $resp->decode_response();
     }
 
-    public function updateStage($profile_id, $job_id, $stage) {
+    public function updateStage($profile_id, $source_id, $job_id, $stage) {
       $bodyParams = array(
-        'job_id' => $job_id,
-        'stage'  => $stage
+        'job_id'    => $job_id,
+        'stage'     => $stage,
+        'source_id' => $source_id
       );
       $resp = $this->riminder->_rest->get("profile/$profile_id/stage");
       return $resp->decode_response();
     }
 
-    public function updateRating($profile_id, $job_id, $rating) {
+    public function updateRating($profile_id, $source_id, $job_id, $rating) {
       $bodyParams = array(
-        'job_id' => $job_id,
-        'stage'  => $rating
+        'job_id'     => $job_id,
+        'stage'      => $rating,
+        'source_id'  => $source_id
       );
       $resp = $this->riminder->_rest->get("profile/$profile_id/rating");
       return $resp->decode_response();

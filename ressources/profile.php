@@ -59,7 +59,7 @@
       //var_dump($query);
       $resp = $this->riminder->_rest->get("profiles", $query);
       ResponseChecker::check($resp);
-      return $resp->decode_response();
+      return $resp->decode_response()['data'];
     }
 
     public function add($source_id, $file, $profile_reference, $reception_date) {
@@ -71,7 +71,7 @@
       );
       $resp = $this->riminder->_rest->post("profile", $bodyParams);
       ResponseChecker::check($resp);
-      return $resp->decode_response();
+      return $resp->decode_response()['data'];
     }
 
     public function get($profile_id, $source_id) {
@@ -80,7 +80,7 @@
       );
       $resp = $this->riminder->_rest->get("profile/$profile_id", $query);
       ResponseChecker::check($resp);
-      return $resp->decode_response();
+      return $resp->decode_response()['data'];
     }
 
     public function getDocuments($profile_id, $source_id) {
@@ -89,7 +89,7 @@
       );
       $resp = $this->riminder->_rest->get("profile/$profile_id/documents", $query);
       ResponseChecker::check($resp);
-      return $resp->decode_response();
+      return $resp->decode_response()['data'];
     }
 
     public function getExtractions($profile_id, $source_id) {
@@ -98,7 +98,7 @@
       );
       $resp = $this->riminder->_rest->get("profile/$profile_id/extractions", $query);
       ResponseChecker::check($resp);
-      return $resp->decode_response();
+      return $resp->decode_response()['data'];
     }
 
     public function getJobs($profile_id, $source_id) {
@@ -107,7 +107,7 @@
       );
       $resp = $this->riminder->_rest->get("profile/$profile_id/jobs", $query);
       ResponseChecker::check($resp);
-      return $resp->decode_response();
+      return $resp->decode_response()['data'];
     }
 
     public function updateStage($profile_id, $source_id, $job_id, $stage) {
@@ -118,7 +118,7 @@
       );
       $resp = $this->riminder->_rest->get("profile/$profile_id/stage");
       ResponseChecker::check($resp);
-      return $resp->decode_response();
+      return $resp->decode_response()['data'];
     }
 
     public function updateRating($profile_id, $source_id, $job_id, $rating) {
@@ -129,7 +129,7 @@
       );
       $resp = $this->riminder->_rest->get("profile/$profile_id/rating");
       ResponseChecker::check($resp);
-      return $resp->decode_response();
+      return $resp->decode_response()['data'];
     }
 
   }

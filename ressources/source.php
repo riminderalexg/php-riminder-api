@@ -10,13 +10,13 @@ require_once 'ResponseChecker.php';
     public function getSources() {
       $resp = $this->riminder->_rest->get("sources");
       ResponseChecker::check($resp);
-      return $resp->decode_response();
+      return $resp->decode_response()['data'];
     }
 
     public function get($source_id) {
       $resp = $this->riminder->_rest->get("source/$source_id");
       ResponseChecker::check($resp);
-      return $resp->decode_response();
+      return $resp->decode_response()['data'];
     }
   }
  ?>

@@ -1,4 +1,5 @@
 <?php
+  require_once 'ResponseChecker.php';
 
   class RiminderProfile
   {
@@ -24,12 +25,12 @@
         return $date;
       }
       if ($date != new DateTime()) {
-        return null;
+        throw new \RiminderApiException($date + "is not a valid date", 1);
       }
       return $date->getTimestamp();
     }
 
-    public function getProfiles($source_ids, $date_start, $date_end, $page = 1, $limit = null, $sort_by = null, $seniority = null, $job_id = null, $stage = null) {
+    public function getProfiles(array $source_ids, $date_start, $date_end, int $page = 1, int $limit = null, $sort_by = null, $seniority = null, $job_id = null, $stage = null) {
 
 
       $query = array (
@@ -57,6 +58,7 @@
       }
       //var_dump($query);
       $resp = $this->riminder->_rest->get("profiles", $query);
+      ResponseChecker::check($resp);
       return $resp->decode_response();
     }
 
@@ -68,6 +70,7 @@
         'timestamp_reception' => RiminderProfile::dateToTimestamp($reception_date)
       );
       $resp = $this->riminder->_rest->post("profile", $bodyParams);
+      ResponseChecker::check($resp);
       return $resp->decode_response();
     }
 
@@ -76,6 +79,7 @@
         'source_id' => $source_id
       );
       $resp = $this->riminder->_rest->get("profile/$profile_id", $query);
+      ResponseChecker::check($resp);
       return $resp->decode_response();
     }
 
@@ -84,6 +88,7 @@
         'source_id' => $source_id
       );
       $resp = $this->riminder->_rest->get("profile/$profile_id/documents", $query);
+      ResponseChecker::check($resp);
       return $resp->decode_response();
     }
 
@@ -92,6 +97,7 @@
         'source_id' => $source_id
       );
       $resp = $this->riminder->_rest->get("profile/$profile_id/extractions", $query);
+      ResponseChecker::check($resp);
       return $resp->decode_response();
     }
 
@@ -100,6 +106,7 @@
         'source_id' => $source_id
       );
       $resp = $this->riminder->_rest->get("profile/$profile_id/jobs", $query);
+      ResponseChecker::check($resp);
       return $resp->decode_response();
     }
 
@@ -110,6 +117,7 @@
         'source_id' => $source_id
       );
       $resp = $this->riminder->_rest->get("profile/$profile_id/stage");
+      ResponseChecker::check($resp);
       return $resp->decode_response();
     }
 
@@ -120,6 +128,7 @@
         'source_id'  => $source_id
       );
       $resp = $this->riminder->_rest->get("profile/$profile_id/rating");
+      ResponseChecker::check($resp);
       return $resp->decode_response();
     }
 

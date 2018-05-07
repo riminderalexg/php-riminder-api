@@ -1,7 +1,7 @@
 <?php
   class TestHelper
   {
-    static public $APISECRET = "ask_9322c036347fd33a3b23fec1e94fb1a8";
+    static public $APISECRET = "";
 
     static public function getSecret() {
       return self::$APISECRET;

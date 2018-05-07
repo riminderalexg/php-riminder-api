@@ -6,11 +6,10 @@ require_once 'TestHelper.php';
 
 use PHPUnit\Framework\TestCase;
 
-final class RiminderTest extends TestCase {
-  public $APISECRET = "ask_ce813e1812ebeb663489abdad8b13aea";
+final class RiminderTestJob extends TestCase {
 
   public function testGetJobs(): void {
-      $api = new Riminder($this->APISECRET);
+      $api = new Riminder(TestHelper::getSecret());
       $refKeys = array('job_id', 'job_reference', 'name', 'archive', 'date_creation');
 
       $getJobs = function () use ($api) { return $api->job->getJobs(); };
@@ -25,7 +24,7 @@ final class RiminderTest extends TestCase {
   }
 
   public function testGet(): void {
-      $api = new Riminder($this->APISECRET);
+      $api = new Riminder(TestHelper::getSecret());
       $refKeys = array('job_id',
         'job_reference',
         'name',
@@ -60,5 +59,14 @@ final class RiminderTest extends TestCase {
       TestHelper::assertArrayHasKeys($this, $resp['stages'], $refStagesKeys);
       TestHelper::assertDateObj($this, $resp['date_creation']);
   }
+
+  public function testGetWithInvalidJobId(): void {
+      $api = new Riminder(TestHelper::getSecret());
+
+      $job_id = 'zap';
+      $getJob = function () use ($api, $job_id) {  return $api->job->get($job_id); };
+      $resp = TestHelper::useApiFuncWithExpectedErr($this, $getJob, 'RiminderApiResponseException');
+  }
+
 }
  ?>

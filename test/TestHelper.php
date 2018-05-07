@@ -1,6 +1,17 @@
 <?php
   class TestHelper
   {
+    static public $APISECRET = "ask_9322c036347fd33a3b23fec1e94fb1a8";
+
+    static public function getSecret() {
+      return self::$APISECRET;
+    }
+
+    static private $lastError = null;
+
+    static public function  getLastError() {
+      return self::$lastError;
+    }
     // use './vendor/bin/phpunit --verbose --bootstrap vendor/autoload.php test/RiminderJobTest.php'
     // to run tests
     static public function assertArrayHasKeys($testCase, $toTest, $refKeys) {
@@ -23,7 +34,8 @@
         return $resp;
 
       } catch (\RiminderApiException $e) {
-        // I didn't see anything...
+        // I didn't see anything..
+        self::$lastError = $e;
       }
       return array();
     }
@@ -34,11 +46,11 @@
         return $resp;
 
       } catch (\RiminderApiResponseException $e) {
-        $this->fail('Test failed cause of invalid response: ' . $e);
+        $testCase->fail('Test failed cause of invalid response: ' . $e);
       } catch (\RiminderApiArgumentException $e) {
-        $this->fail('Test failed cause of invalid argument: ' . $e);
+        $testCase->fail('Test failed cause of invalid argument: ' . $e);
       } catch (\RiminderApiException $e) {
-        $this->markTestSkipped('Test skipped cause of: ' . $e);
+        $testCase->markTestSkipped('Test skipped cause of: ' . $e);
       }
     }
 
@@ -48,8 +60,26 @@
         return $resp;
 
       } catch (\RiminderApiException $e) {
-        $this->markTestSkipped('Test skipped cause of: ' . $e);
+        $testCase->markTestSkipped('Test skipped cause of: ' . $e);
       }
+    }
+
+    static public function useApiFuncWithExpectedErr($testCase, $func, $expectedExp) {
+
+      try {
+        $resp = $func();
+      }catch (\RiminderApiResponseException $e) {
+        $testCase->assertInstanceOf($expectedExp, $e);
+        return $e;
+      } catch (\RiminderApiArgumentException $e) {
+        $testCase->assertInstanceOf($expectedExp, $e);
+        return $e;
+      } catch (\RiminderApiException $e) {
+        $testCase->assertInstanceOf($expectedExp, $e);
+        return $e;
+      }
+      $testCase->fail('Expected an error of type ' . $expectedExp);
+      return null;
     }
   }
  ?>

@@ -24,7 +24,7 @@
       if (is_int($date)){
         return $date;
       }
-      if ($date != new DateTime()) {
+      if (!($date instanceof DateTime)) {
         throw new \RiminderApiArgumentException('date', $argName, 1);
       }
       return $date->getTimestamp();
@@ -55,7 +55,6 @@
       if ($sort_by != null) {
         $query['sort_by'] = $sort_by;
       }
-      //var_dump($query);
       $resp = $this->riminder->_rest->get("profiles", $query);
       ResponseChecker::check($resp);
       return $resp->decode_response()['data'];

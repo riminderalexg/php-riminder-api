@@ -11,8 +11,6 @@ class RiminderApiArgumentException extends Exception
 
     function __construct($expectedType, $argumentName, $expCode = 0)
     {
-        $this->httpcode = $httpcode;
-        $this->httpmessage = $message;
         $message = $argumentName . 'is not a valid ' . $expectedType;
         parent::__construct($message, $expCode);
     }

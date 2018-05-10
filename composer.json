@@ -1,0 +1,23 @@
+{
+    "name": "riminder/riminder-php-api",
+    "description": "An api client for riminder",
+    "keyword": ["riminder", "riminder", "riminder api", "riminder api client"],
+    "type": "library",
+    "require": {
+        "php": "^7.2",
+        "tcdent/php-restclient": "^0.1.7"
+    },
+    "authors": [
+        {
+            "name": "Alexandre Gotte",
+            "email": "alexandre.gotte@riminder.net"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+      "files": ["Riminder.php"]
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.1"
+    }
+}

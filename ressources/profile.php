@@ -114,7 +114,7 @@
         'stage'     => $stage,
         'source_id' => $source_id
       );
-      $resp = $this->riminder->_rest->get("profile/$profile_id/stage");
+      $resp = $this->riminder->_rest->patch("profile/$profile_id/stage");
       ResponseChecker::check($resp);
       return $resp->decode_response()['data'];
     }
@@ -125,7 +125,7 @@
         'stage'      => $rating,
         'source_id'  => $source_id
       );
-      $resp = $this->riminder->_rest->get("profile/$profile_id/rating");
+      $resp = $this->riminder->_rest->patch("profile/$profile_id/rating");
       ResponseChecker::check($resp);
       return $resp->decode_response()['data'];
     }

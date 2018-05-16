@@ -16,8 +16,5 @@
     "minimum-stability": "dev",
     "autoload": {
       "files": ["Riminder.php"]
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^7.1"
     }
 }

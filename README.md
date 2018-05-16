@@ -5,8 +5,7 @@
 ## Installation with composer
 
 ```
-// TODO: do something about that
-echo $futur->packageComposer()->install->howTo()->toReadableString()
+composer require riminder/riminder-php-api
 ```
 
 ## Authentication

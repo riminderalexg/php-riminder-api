@@ -1,4 +1,5 @@
 <?php
+require_once 'ResponseChecker.php';
 
   class RiminderSource
   {
@@ -8,12 +9,14 @@
 
     public function getSources() {
       $resp = $this->riminder->_rest->get("sources");
-      return $resp->decode_response();
+      ResponseChecker::check($resp);
+      return $resp->decode_response()['data'];
     }
 
     public function get($source_id) {
       $resp = $this->riminder->_rest->get("source/$source_id");
-      return $resp->decode_response();
+      ResponseChecker::check($resp);
+      return $resp->decode_response()['data'];
     }
   }
  ?>

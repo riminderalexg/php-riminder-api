@@ -8,10 +8,7 @@ class Riminder
 {
   public $DEFAULT_HOST = "https://www.riminder.net/sf/public/api/";
   public $DEFAULT_HOST_BASE = "v1.0/";
-  //
-  // public $DEFAULT_HOST = "http://localhost:4242";
-  // public $DEFAULT_HOST_BASE = "";
-
+  
   public function __construct($apiSecret) {
     $this->auth = array();
 

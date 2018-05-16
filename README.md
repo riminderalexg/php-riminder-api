@@ -1,4 +1,6 @@
 ### Riminder API PHP
+🐘 Riminder API PHP Wrapper
+
 -------------
 ## Installation with composer
 

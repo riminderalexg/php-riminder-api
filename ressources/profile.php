@@ -30,7 +30,7 @@
       return $date->getTimestamp();
     }
 
-    public function getProfiles(array $source_ids, $date_start, $date_end, int $page = 1, int $limit = null, $sort_by = null, $seniority = null, $job_id = null, $stage = null) {
+    public function getProfiles(array $source_ids, $date_start, $date_end, int $page = 1, int $limit = null, $sort_by = null, $seniority = null, $filter_id = null, $stage = null) {
 
       $query = array (
         'source_ids'  => RiminderProfile::serializeSourceIds($source_ids),
@@ -43,8 +43,8 @@
       if ($seniority != null) {
         $query['seniority'] = $seniority;
       }
-      if ($job_id != null) {
-        $query['job_id'] = $job_id;
+      if ($filter_id != null) {
+        $query['filter_id'] = $filter_id;
       }
       if ($stage != null) {
         $query['stage'] = $stage;
@@ -74,58 +74,64 @@
 
     public function get($profile_id, $source_id) {
       $query = array(
-        'source_id' => $source_id
+        'source_id'  => $source_id,
+        'profile_id' => $profile_id
       );
-      $resp = $this->riminder->_rest->get("profile/$profile_id", $query);
+      $resp = $this->riminder->_rest->get("profile/profile", $query);
       ResponseChecker::check($resp);
       return $resp->decode_response()['data'];
     }
 
     public function getDocuments($profile_id, $source_id) {
       $query = array(
-        'source_id' => $source_id
+        'source_id'  => $source_id,
+        'profile_id' => $profile_id
       );
-      $resp = $this->riminder->_rest->get("profile/$profile_id/documents", $query);
+      $resp = $this->riminder->_rest->get("profile/profile/documents", $query);
       ResponseChecker::check($resp);
       return $resp->decode_response()['data'];
     }
 
-    public function getExtractions($profile_id, $source_id) {
+    public function getParsing($profile_id, $source_id) {
       $query = array(
-        'source_id' => $source_id
+        'source_id'  => $source_id,
+        'profile_id' => $profile_id
       );
-      $resp = $this->riminder->_rest->get("profile/$profile_id/extractions", $query);
+      $resp = $this->riminder->_rest->get("profile/profile/parsing", $query);
       ResponseChecker::check($resp);
       return $resp->decode_response()['data'];
     }
 
-    public function getJobs($profile_id, $source_id) {
+    public function getScoring($profile_id, $source_id) {
       $query = array(
-        'source_id' => $source_id
+        'source_id'  => $source_id,
+        'profile_id' => $profile_id
       );
-      $resp = $this->riminder->_rest->get("profile/$profile_id/jobs", $query);
+      $resp = $this->riminder->_rest->get("profile/profile/scoring", $query);
       ResponseChecker::check($resp);
       return $resp->decode_response()['data'];
     }
 
     public function updateStage($profile_id, $source_id, $job_id, $stage) {
       $bodyParams = array(
-        'job_id'    => $job_id,
-        'stage'     => $stage,
-        'source_id' => $source_id
+        'job_id'      => $job_id,
+        'stage'       => $stage,
+        'source_id'   => $source_id,
+        'profile_id'  => $profile_id
       );
-      $resp = $this->riminder->_rest->patch("profile/$profile_id/stage");
+      $resp = $this->riminder->_rest->patch("profile/profile/stage");
       ResponseChecker::check($resp);
       return $resp->decode_response()['data'];
     }
 
     public function updateRating($profile_id, $source_id, $job_id, $rating) {
       $bodyParams = array(
-        'job_id'     => $job_id,
-        'stage'      => $rating,
-        'source_id'  => $source_id
+        'job_id'      => $job_id,
+        'stage'       => $rating,
+        'source_id'   => $source_id,
+        'profile_id'  => $profile_id
       );
-      $resp = $this->riminder->_rest->patch("profile/$profile_id/rating");
+      $resp = $this->riminder->_rest->patch("profile/profile/rating");
       ResponseChecker::check($resp);
       return $resp->decode_response()['data'];
     }

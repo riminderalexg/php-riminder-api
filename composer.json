@@ -3,6 +3,7 @@
     "description": "An api client for riminder",
     "keyword": ["riminder", "riminder", "riminder api", "riminder api client"],
     "version": "1.2.0",
+    "license": "MIT",
     "type": "library",
     "require": {
         "php": "^7.2",

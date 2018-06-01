@@ -77,7 +77,7 @@
         'source_id'  => $source_id,
         'profile_id' => $profile_id
       );
-      $resp = $this->riminder->_rest->get("profile/profile", $query);
+      $resp = $this->riminder->_rest->get("profile", $query);
       ResponseChecker::check($resp);
       return $resp->decode_response()['data'];
     }
@@ -87,7 +87,7 @@
         'source_id'  => $source_id,
         'profile_id' => $profile_id
       );
-      $resp = $this->riminder->_rest->get("profile/profile/documents", $query);
+      $resp = $this->riminder->_rest->get("profile/documents", $query);
       ResponseChecker::check($resp);
       return $resp->decode_response()['data'];
     }
@@ -97,7 +97,7 @@
         'source_id'  => $source_id,
         'profile_id' => $profile_id
       );
-      $resp = $this->riminder->_rest->get("profile/profile/parsing", $query);
+      $resp = $this->riminder->_rest->get("profile/parsing", $query);
       ResponseChecker::check($resp);
       return $resp->decode_response()['data'];
     }
@@ -107,7 +107,7 @@
         'source_id'  => $source_id,
         'profile_id' => $profile_id
       );
-      $resp = $this->riminder->_rest->get("profile/profile/scoring", $query);
+      $resp = $this->riminder->_rest->get("profile/scoring", $query);
       ResponseChecker::check($resp);
       return $resp->decode_response()['data'];
     }
@@ -119,7 +119,7 @@
         'source_id'   => $source_id,
         'profile_id'  => $profile_id
       );
-      $resp = $this->riminder->_rest->patch("profile/profile/stage");
+      $resp = $this->riminder->_rest->patch("profile/stage");
       ResponseChecker::check($resp);
       return $resp->decode_response()['data'];
     }
@@ -131,7 +131,7 @@
         'source_id'   => $source_id,
         'profile_id'  => $profile_id
       );
-      $resp = $this->riminder->_rest->patch("profile/profile/rating");
+      $resp = $this->riminder->_rest->patch("profile/rating");
       ResponseChecker::check($resp);
       return $resp->decode_response()['data'];
     }

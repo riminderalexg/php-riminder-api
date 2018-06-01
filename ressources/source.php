@@ -14,7 +14,8 @@ require_once 'ResponseChecker.php';
     }
 
     public function get($source_id) {
-      $resp = $this->riminder->_rest->get("source/$source_id");
+      $query = array('source_id' => $source_id);
+      $resp = $this->riminder->_rest->get("source", $query);
       ResponseChecker::check($resp);
       return $resp->decode_response()['data'];
     }

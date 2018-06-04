@@ -1,23 +1,28 @@
 <?php
 
 /**
- *
+ *  RiminderApiException is the standard exception for Riminder sdk.
+ *  All other riminder exception inhertits from it.
  */
 class RiminderApiException extends Exception
 { }
 
-class RiminderApiArgumentException extends Exception
+/**
+ *  RiminderApiArgumentException occurs when arguments passed to a route
+ *  are invalid (bad types, missing, ...).
+ */
+class RiminderApiArgumentException extends RiminderApiException
 {
 
-    function __construct($expectedType, $argumentName, $expCode = 0)
+    function __construct($message, $expCode = 0)
     {
-        $message = $argumentName . 'is not a valid ' . $expectedType;
         parent::__construct($message, $expCode);
     }
 }
 
 /**
- *
+ * RiminderApiResponseException occurs when the server responde an error code.
+ * It containt the code and the reason.
  */
 class RiminderApiResponseException extends RiminderApiException
 {

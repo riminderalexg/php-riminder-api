@@ -1,5 +1,6 @@
 <?php
   require_once 'ResponseChecker.php';
+  require_once 'IdReferenceSelector.php';
 
   class RiminderFilter
   {
@@ -13,11 +14,8 @@
       return $resp->decode_response()['data'];
     }
 
-    public function get($filter_id, $filter_reference) {
-      $query = array(
-        'filter_id'        => $filter_id,
-        'filter_reference' => $filter_reference
-      );
+    public function get($filter_id, $filter_reference=null) {
+      $query = IdReferenceSelector::select('filter', $filter_id, $filter_reference);
       $resp = $this->riminder->_rest->get("filter", $query);
       ResponseChecker::check($resp);
       return $resp->decode_response()['data'];

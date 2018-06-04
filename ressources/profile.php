@@ -1,5 +1,6 @@
 <?php
   require_once 'ResponseChecker.php';
+  require_once 'IdReferenceSelector.php';
 
   class RiminderProfile
   {
@@ -8,6 +9,10 @@
     }
 
     private static function serializeSourceIds($source_ids) {
+      if (!is_array($source_ids)) {
+        $mess = sprintf('Source_ids should be an array.');
+        throw new \RiminderApiArgumentException($mess, 1);
+      }
       $res = "";
       $i = 0;
       foreach ($source_ids as $source_id) {
@@ -25,113 +30,100 @@
         return $date;
       }
       if (!($date instanceof DateTime)) {
-        throw new \RiminderApiArgumentException('date', $argName, 1);
+        $mess = $argName.' is not a valid date.';
+        throw new \RiminderApiArgumentException($mess, 1);
       }
       return $date->getTimestamp();
     }
 
-    public function getProfiles(array $source_ids, $date_start, $date_end, int $page = 1, int $limit = null, $sort_by = null, $seniority = null, $filter_id = null, $stage = null) {
-
-      $query = array (
-        'source_ids'  => RiminderProfile::serializeSourceIds($source_ids),
-        'date_start'  => RiminderProfile::argDateToTimestamp($date_start, 'date_start'),
-        'date_end'    => RiminderProfile::argDateToTimestamp($date_end, 'date_end'),
-      );
-      if ($page != null) {
-        $query['page'] = $page;
-      }
-      if ($seniority != null) {
-        $query['seniority'] = $seniority;
-      }
-      if ($filter_id != null) {
-        $query['filter_id'] = $filter_id;
-      }
-      if ($stage != null) {
-        $query['stage'] = $stage;
-      }
-      if ($limit != null) {
-        $query['limit'] = $limit;
-      }
-      if ($sort_by != null) {
-        $query['sort_by'] = $sort_by;
-      }
+    public function getProfiles(array $query) {
+      $query['source_ids'] = RiminderProfile::serializeSourceIds($query['source_ids']);
+      $query['date_start'] = RiminderProfile::argDateToTimestamp($query['date_start']);
+      $query['date_end'] = RiminderProfile::argDateToTimestamp($query['date_end']);
       $resp = $this->riminder->_rest->get("profiles", $query);
       ResponseChecker::check($resp);
       return $resp->decode_response()['data'];
     }
 
-    public function add($source_id, $file, $profile_reference, $reception_date) {
+    /*
+    *  profile.add add a profile to your account. $file field has to be the full
+    *  file in a string.
+    */
+    public function add($source_id, $file, $profile_reference, $reception_date, $training_metadata) {
       $bodyParams = array (
         'source_id'           => $source_id,
         'file'                => $file,
         'profile_reference'   => $profile_reference,
-        'timestamp_reception' => RiminderProfile::argDateToTimestamp($reception_date, 'reception_date')
+        'timestamp_reception' => RiminderProfile::argDateToTimestamp($reception_date, 'reception_date'),
+        'training_metadata'   => $training_metadata
       );
       $resp = $this->riminder->_rest->post("profile", $bodyParams);
       ResponseChecker::check($resp);
       return $resp->decode_response()['data'];
     }
 
-    public function get($profile_id, $source_id) {
+    public function get($profile_id, $source_id, $profile_reference) {
       $query = array(
-        'source_id'  => $source_id,
-        'profile_id' => $profile_id
+        'source_id'  => $source_id
       );
+      $query = array_merge($query, IdReferenceSelector::select('profile', $profile_id, $profile_reference));
       $resp = $this->riminder->_rest->get("profile", $query);
       ResponseChecker::check($resp);
       return $resp->decode_response()['data'];
     }
 
-    public function getDocuments($profile_id, $source_id) {
+    public function getDocuments($profile_id, $source_id, $profile_reference) {
       $query = array(
-        'source_id'  => $source_id,
-        'profile_id' => $profile_id
+        'source_id'  => $source_id
       );
+      $query = array_merge($query, IdReferenceSelector::select('profile', $profile_id, $profile_reference));
       $resp = $this->riminder->_rest->get("profile/documents", $query);
       ResponseChecker::check($resp);
       return $resp->decode_response()['data'];
     }
 
-    public function getParsing($profile_id, $source_id) {
+    public function getParsing($profile_id, $source_id, $profile_reference) {
       $query = array(
-        'source_id'  => $source_id,
-        'profile_id' => $profile_id
+        'source_id'  => $source_id
       );
+      $query = array_merge($query, IdReferenceSelector::select('profile', $profile_id, $profile_reference));
       $resp = $this->riminder->_rest->get("profile/parsing", $query);
       ResponseChecker::check($resp);
       return $resp->decode_response()['data'];
     }
 
-    public function getScoring($profile_id, $source_id) {
+    public function getScoring($profile_id, $source_id, $profile_reference) {
       $query = array(
-        'source_id'  => $source_id,
-        'profile_id' => $profile_id
+        'source_id'  => $source_id
       );
+      $query = array_merge($query, IdReferenceSelector::select('profile', $profile_id, $profile_reference));
       $resp = $this->riminder->_rest->get("profile/scoring", $query);
       ResponseChecker::check($resp);
       return $resp->decode_response()['data'];
     }
 
-    public function updateStage($profile_id, $source_id, $job_id, $stage) {
+    public function updateStage($profile_id, $source_id, $filter_id, $stage,
+                              $filter_reference, $profile_reference) {
       $bodyParams = array(
-        'job_id'      => $job_id,
         'stage'       => $stage,
         'source_id'   => $source_id,
-        'profile_id'  => $profile_id
       );
-      $resp = $this->riminder->_rest->patch("profile/stage");
+      $bodyParams = array_merge($bodyParams, IdReferenceSelector::select('profile', $profile_id, $profile_reference));
+      $bodyParams = array_merge($bodyParams, IdReferenceSelector::select('filter', $filter_id, $filter_reference));
+      $resp = $this->riminder->_rest->patch("profile/stage", $bodyParams);
       ResponseChecker::check($resp);
       return $resp->decode_response()['data'];
     }
 
-    public function updateRating($profile_id, $source_id, $job_id, $rating) {
+    public function updateRating($profile_id, $source_id, $filter_id, $rating,
+                                $filter_reference, $profile_reference) {
       $bodyParams = array(
-        'job_id'      => $job_id,
-        'stage'       => $rating,
+        'rating'       => $rating,
         'source_id'   => $source_id,
-        'profile_id'  => $profile_id
       );
-      $resp = $this->riminder->_rest->patch("profile/rating");
+      $bodyParams = array_merge($bodyParams, IdReferenceSelector::select('profile', $profile_id, $profile_reference));
+      $bodyParams = array_merge($bodyParams, IdReferenceSelector::select('filter', $filter_id, $filter_reference));
+      $resp = $this->riminder->_rest->patch("profile/rating", $bodyParams);
       ResponseChecker::check($resp);
       return $resp->decode_response()['data'];
     }

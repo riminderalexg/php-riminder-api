@@ -43,21 +43,29 @@ echo "Profile '$profile_id' is named '$name', a beautiful name actually"
 If an error occurs while an operation an exception of type `RiminderApiException` is raised.
 
 ## Methods & Resources
-
-* # Jobs
-  * Get all jobs for given team account : `RiminderClient->job->getJobs()`
-  * Get the job information associated with job id : `RiminderClient->job->get($source_id)`
+  For any methods that needs id and reference (except `getProfiles`)
+  you need to provide at least one of them but not necessarily both.
+* # filters
+  * Get all filters for given team account : `RiminderClient->filter->getfilters()`
+  * Get the filter information associated with filter id : `RiminderClient->filter->get($filter_id, $filter_reference)`
 * # Profiles
-  * Retrieve the profiles information associated with some source ids : `RiminderClient->profile->getProfiles($source_ids, $date_start_timestamp, $date_end_timestamp, [$page, $limit, $sort_by, $seniority, $job_id, $stage])`
-  * Add a resume to a sourced id : `RiminderClient->profile->add($source_id, $file, $profile_reference, $timestamp_reception)`
-  * Get the profile information associated with both profile id and source id : `RiminderClient->profile->get($profile_id, $source_id)`
-  * Retrieve the profile documents associated with both profile id and source id : `RiminderClient->profile->getDocuments($profile_id, $source_id)`
-  * Retrieve the profile extractions associated with both profile id and source id : `RiminderClient->profile->getExtractions($profile_id, $source_id)`
-  * Retrieve the profile jobs associated with both profile id and source id : `RiminderClient->profile->getJobs($profile_id, $source_id)`
-  * Edit the profile stage given a job : `RiminderClient->profile->updateStage($profile_id, $source_id, $job_id, $rating)`
-  * Edit the profile rating given a job : `RiminderClient->profile->updateRating($profile_id, $source_id, $job_id, $rating)`
+  * Retrieve the profiles information associated with some source ids : `RiminderClient->profile->getProfiles(array $args)` `$args` is a array that contains all query parameters you need.
+  * Add a resume to a sourced id : `RiminderClient->profile->add($source_id, $file, $profile_reference, $timestamp_reception, $training_metadata)`
+  * Get the profile information associated with both profile id and source id : `RiminderClient->profile->get($profile_id, $source_id, $profile_reference)`
+  * Retrieve the profile documents associated with both profile id and source id : `RiminderClient->profile->getDocuments($profile_id, $source_id, $profile_reference)`
+  * Retrieve the profile parsing data associated with both profile id and source id : `RiminderClient->profile->getParsing($profile_id, $source_id, $profile_reference)`
+  * Retrieve the profile scoring data associated with both profile id and source id : `RiminderClient->profile->getScoring($profile_id, $source_id, $profile_reference)`
+  * Edit the profile stage given a filter : `RiminderClient->profile->updateStage($profile_id, $source_id, $filter_id, $rating, $filter_reference, $profile_reference)`
+  * Edit the profile rating given a filter : `RiminderClient->profile->updateRating($profile_id, $source_id, $filter_id, $rating, $filter_reference, $profile_reference)`
 * # Sources
   * Get all sources for given team account: `RiminderClient->source->getSources()`
   * Get the source information associated with source id: `RiminderClient->source->get($source_id)`
+* # Constant
+  * `RiminderClient->Fields` Contain constants to fill profile's `args` array
+  * `RiminderClient->Stage`  Contain constants that represent profile stage.
+  * `RiminderClient->Sort_by`  Contain constants that represent sorting options.
+  * `RiminderClient->Order_by`  Contain constants that represent order options.
+  * `RiminderClient->Seniority`  Contain constants that represent profile seniority.
+  * `RiminderClient->Training_metadata`  Contain constants that represent metadata fields for profile adding.
 
 For details about method's arguments and return values see [api's documentation](https://developers.riminder.net/v1.0/reference#source)

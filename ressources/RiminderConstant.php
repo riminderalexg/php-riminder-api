@@ -2,15 +2,9 @@
 
     class RiminderSeniority
     {
-      public $SENIOR;
-      public $JUNIOR;
-      public $ALL;
-
-      public function __construct() {
-        $this->$SENIOR = 'senior';
-        $this->$JUNIOR = 'junior';
-        $this->$ALL    = 'all';
-      }
+      public $SENIOR = 'senior';
+      public $JUNIOR = 'junior';
+      public $ALL    = 'all';
     }
 
     class RiminderStage

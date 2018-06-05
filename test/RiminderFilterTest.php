@@ -55,6 +55,7 @@ final class RiminderTestFilter extends TestCase {
         return;
       }
 
+      var_dump($resp);
       TestHelper::assertArrayHasKeys($this, $resp, $refKeys);
       TestHelper::assertArrayHasKeys($this, $resp['filter'], $refFilterKeys);
       TestHelper::assertArrayHasKeys($this, $resp['stages'], $refStagesKeys);

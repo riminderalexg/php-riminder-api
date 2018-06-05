@@ -50,7 +50,7 @@ If an error occurs while an operation an exception of type `RiminderApiException
   * Get the filter information associated with filter id : `RiminderClient->filter->get($filter_id, $filter_reference)`
 * # Profiles
   * Retrieve the profiles information associated with some source ids : `RiminderClient->profile->getProfiles(array $args)` `$args` is a array that contains all query parameters you need.
-  * Add a resume to a sourced id : `RiminderClient->profile->add($source_id, $file, $profile_reference, $timestamp_reception, $training_metadata)`
+  * Add a resume to a sourced id : `RiminderClient->profile->add($source_id, $file_path, $profile_reference, $timestamp_reception, $training_metadata)`
   * Get the profile information associated with both profile id and source id : `RiminderClient->profile->get($profile_id, $source_id, $profile_reference)`
   * Retrieve the profile documents associated with both profile id and source id : `RiminderClient->profile->getDocuments($profile_id, $source_id, $profile_reference)`
   * Retrieve the profile parsing data associated with both profile id and source id : `RiminderClient->profile->getParsing($profile_id, $source_id, $profile_reference)`

@@ -388,7 +388,7 @@ final class RiminderTestProfile extends TestCase {
       }
       self::$testSourceId = $source_ids[0];
       $sourceId = $source_ids[0];
-      $file = file_get_contents("./test/testFile.pdf");
+      $file = "./test/testFile.pdf";
       $profile_ref = strval(rand(0, 99999));
 
       $addProfile = function () use ($api, $now, $sourceId, $file, $profileRef)

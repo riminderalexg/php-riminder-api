@@ -59,10 +59,10 @@
     *  profile.add add a profile to your account. $file field has to be the full
     *  file in a string.
     */
-    public function add($source_id, $file, $profile_reference, $reception_date, $training_metadata=null) {
+    public function add($source_id, $file_path, $profile_reference, $reception_date, $training_metadata=null) {
       $bodyParams = array (
         'source_id'           => $source_id,
-        'file'                => $file,
+        'file'                => file_get_contents("./test/testFile.pdf"),
         'profile_reference'   => $profile_reference,
         'timestamp_reception' => RiminderProfile::argDateToTimestamp($reception_date, 'reception_date'),
       );

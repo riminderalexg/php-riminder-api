@@ -384,19 +384,19 @@ final class RiminderTestProfile extends TestCase {
       $refKeys = array('profile_reference', 'file_id', 'file_name', 'file_size', 'extension', 'date_reception');
       $now =  new DateTime();
       $filterType = array('api');
-      $filterName = array('test_api_package');
+      $filterName = array('sdk_test');
       $source_ids = $this->getSomeNotSharedSourceIds($api, $filterType, $filterName);
       if (empty($source_ids)){
         $this->markTestSkipped('no api sources with this key');
       }
       self::$testSourceId = $source_ids[0];
-      $sourceId = $source_ids[0];
-      $file = "./test/testFile.pdf";
+      $source_id = $source_ids[0];
+      $file = "./test/test_cv.pdf";
       $profile_ref = strval(rand(0, 99999));
 
-      $addProfile = function () use ($api, $now, $sourceId, $file, $profileRef)
+      $addProfile = function () use ($api, $now, $source_id, $file, $profile_ref)
       { return $api->profile->add($source_id, $file, $profile_ref, $now->getTimestamp()); };
-      $resp = TestHelper::useApiFuncWithReportedErr($this, $getfilter, $filter_id);
+      $resp = TestHelper::useApiFuncWithReportedErr($this, $addProfile);
       if (empty($resp)) {
         $this->fail('No datas retrieved!');
         return;

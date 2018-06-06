@@ -1,5 +1,5 @@
 <?php
-  require_once 'ResponseChecker.php';
+
   require_once 'RequestBodyUtils.php';
 
   class RiminderProfile
@@ -46,8 +46,8 @@
       $resp = $this->riminder->_rest->get("profiles", $query);
       file_put_contents("zap", $resp->response);
       // var_dump($resp);
-      ResponseChecker::check($resp);
-      return $resp->decode_response()['data'];
+
+      return json_decode($resp)['data'];
     }
 
     /*
@@ -57,14 +57,17 @@
     public function add($source_id, $file_path, $profile_reference, $reception_date, $training_metadata=null) {
       $bodyParams = array (
         'source_id'           => $source_id,
-        'file'                => file_get_contents("./test/testFile.pdf"),
+        'file'                => file_get_contents($file_path),
         'profile_reference'   => $profile_reference,
         'timestamp_reception' => RiminderProfile::argDateToTimestamp($reception_date, 'reception_date'),
       );
+      // print($bodyParams['file']);
+      // throw new \Exception("Error Processing Request", 1);
+
       RequestBodyUtils::add_if_not_null($bodyParams, 'training_metadata', $training_metadata);
       $resp = $this->riminder->_rest->post("profile", $bodyParams);
-      ResponseChecker::check($resp);
-      return $resp->decode_response()['data'];
+
+      return json_decode($resp)['data'];
     }
 
     public function get($profile_id, $source_id, $profile_reference=null) {
@@ -73,8 +76,8 @@
       );
       $query = array_merge($query, RequestBodyUtils::selectIdRef('profile', $profile_id, $profile_reference));
       $resp = $this->riminder->_rest->get("profile", $query);
-      ResponseChecker::check($resp);
-      return $resp->decode_response()['data'];
+
+      return json_decode($resp)['data'];
     }
 
     public function getDocuments($profile_id, $source_id, $profile_reference=null) {
@@ -83,8 +86,8 @@
       );
       $query = array_merge($query, RequestBodyUtils::selectIdRef('profile', $profile_id, $profile_reference));
       $resp = $this->riminder->_rest->get("profile/documents", $query);
-      ResponseChecker::check($resp);
-      return $resp->decode_response()['data'];
+
+      return json_decode($resp)['data'];
     }
 
     public function getParsing($profile_id, $source_id, $profile_reference=null) {
@@ -93,8 +96,8 @@
       );
       $query = array_merge($query, RequestBodyUtils::selectIdRef('profile', $profile_id, $profile_reference));
       $resp = $this->riminder->_rest->get("profile/parsing", $query);
-      ResponseChecker::check($resp);
-      return $resp->decode_response()['data'];
+
+      return json_decode($resp)['data'];
     }
 
     public function getScoring($profile_id, $source_id, $profile_reference=null) {
@@ -103,8 +106,8 @@
       );
       $query = array_merge($query, RequestBodyUtils::selectIdRef('profile', $profile_id, $profile_reference));
       $resp = $this->riminder->_rest->get("profile/scoring", $query);
-      ResponseChecker::check($resp);
-      return $resp->decode_response()['data'];
+
+      return json_decode($resp)['data'];
     }
 
     public function updateStage($profile_id, $source_id, $filter_id, $stage,
@@ -116,8 +119,8 @@
       $bodyParams = array_merge($bodyParams, RequestBodyUtils::selectIdRef('profile', $profile_id, $profile_reference));
       $bodyParams = array_merge($bodyParams, RequestBodyUtils::selectIdRef('filter', $filter_id, $filter_reference));
       $resp = $this->riminder->_rest->patch("profile/stage", $bodyParams);
-      ResponseChecker::check($resp);
-      return $resp->decode_response()['data'];
+
+      return json_decode($resp)['data'];
     }
 
     public function updateRating($profile_id, $source_id, $filter_id, $rating,
@@ -129,8 +132,8 @@
       $bodyParams = array_merge($bodyParams, RequestBodyUtils::selectIdRef('profile', $profile_id, $profile_reference));
       $bodyParams = array_merge($bodyParams, RequestBodyUtils::selectIdRef('filter', $filter_id, $filter_reference));
       $resp = $this->riminder->_rest->patch("profile/rating", $bodyParams);
-      ResponseChecker::check($resp);
-      return $resp->decode_response()['data'];
+
+      return json_decode($resp)['data'];
     }
 
   }

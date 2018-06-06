@@ -25,7 +25,7 @@ final class RiminderTestProfile extends TestCase {
     return false;
   }
 
-  private function getSomeNotSharedSourceIds($api, $typeFilters = array(), $nameFilters = array()) {
+  private function getSomeNotSharedSourceIds($api, $typeFilters = array(), $nameFilters = array(), $n_ids = 5) {
     $source_ids = array();
 
     $getSources = function () use ($api) { return $api->source->getSources(); };
@@ -40,6 +40,9 @@ final class RiminderTestProfile extends TestCase {
       $ok3 = self::isFiltered($source, 'name', $nameFilters);
       if ($ok && $ok3) {
         $source_ids[] = $source['source_id'];
+      }
+      if (count($source_ids) > $n_ids) {
+        break;
       }
     }
     return $source_ids;
@@ -98,8 +101,8 @@ final class RiminderTestProfile extends TestCase {
       $stage = null;
       $page = 2;
       $limit = 10;
-      $sort_by = "RANKING";
-      $order_by = 'ASC';
+      $sort_by = "ranking";
+      $order_by = 'asc';
 
       $args = array(
         $api->Fields->SOURCE_IDS => $source_ids,
@@ -111,7 +114,7 @@ final class RiminderTestProfile extends TestCase {
         'page' => $page,
         'limit' => $limit,
         'sort_by' => $sort_by,
-        'order_by' => 'ASC'
+        'order_by' => $order_by
        );
       $getProfiles = function () use ($api, $args)
        { return $api->profile->getProfiles($args); };

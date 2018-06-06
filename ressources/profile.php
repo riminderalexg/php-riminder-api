@@ -13,14 +13,7 @@
         $mess = sprintf('Source_ids should be an array.');
         throw new \RiminderApiArgumentException($mess, 1);
       }
-      $res = "";
-      $i = 0;
-      foreach ($source_ids as $source_id) {
-        $res = $res . $source_id;
-        if (++$i !== count($source_ids)) {
-          $res = $res . ',';
-        }
-      }
+      $res = json_encode($source_ids);
       return($res);
     }
 
@@ -51,6 +44,8 @@
       $query['date_start'] = RiminderProfile::argDateToTimestamp($query['date_start']);
       $query['date_end'] = RiminderProfile::argDateToTimestamp($query['date_end']);
       $resp = $this->riminder->_rest->get("profiles", $query);
+      file_put_contents("zap", $resp->response);
+      // var_dump($resp);
       ResponseChecker::check($resp);
       return $resp->decode_response()['data'];
     }

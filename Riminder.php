@@ -1,8 +1,8 @@
 <?php
 
-require __DIR__ . '/ressources/filter.php';
-require __DIR__ . '/ressources/profile.php';
-require __DIR__ . '/ressources/source.php';
+require_once __DIR__ . '/ressources/filter.php';
+require_once __DIR__ . '/ressources/profile.php';
+require_once __DIR__ . '/ressources/source.php';
 require_once __DIR__ . '/ressources/RiminderConstant.php';
 require_once __DIR__ . '/ressources/GuzzleWrapper.php';
 

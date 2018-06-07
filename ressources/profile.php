@@ -56,9 +56,7 @@
     */
     public function add($source_id, $file_path, $profile_reference=null, $reception_date=null, $training_metadata=null) {
       $bodyParams = array (
-        'source_id'           => $source_id,
-        'profile_reference'   => $profile_reference,
-        'timestamp_reception' => RiminderProfile::argDateToTimestamp($reception_date, 'reception_date'),
+        'source_id'           => $source_id
       );
 
       RequestBodyUtils::add_if_not_null($bodyParams, 'training_metadata', $training_metadata);

@@ -27,11 +27,12 @@ class RiminderApiArgumentException extends RiminderApiException
 class RiminderApiResponseException extends RiminderApiException
 {
 
-  function __construct($httpcode, $message, $expCode = 0)
+  function __construct($httpcode, $message, $url,$expCode = 0)
   {
       $this->httpcode = $httpcode;
       $this->httpmessage = $message;
-      $message = 'HTTP Response error: \'' . strval($this->httpcode) . ': ' . $this->httpmessage . '\'';
+      $this->url = $url;
+      $message = 'HTTP Response error for url\''.$url.'\': \'' . strval($this->httpcode) . ': ' . $this->httpmessage . '\'';
       parent::__construct($message, $expCode);
   }
 
@@ -41,6 +42,11 @@ class RiminderApiResponseException extends RiminderApiException
 
   public function getHttpMessage() {
     return $this->httpmessage;
+  }
+
+  public function getUrl()
+  {
+    return $this->url;
   }
 }
 

@@ -24,7 +24,7 @@ class Riminder
     $this->_rest = new GuzzleWrapper(array(
       "base_url"     => $this->DEFAULT_HOST . $this->DEFAULT_HOST_BASE,
       "headers"      => ["X-API-KEY"     => $apiSecret],
-    ));
+    ), $this->DEFAULT_HOST . $this->DEFAULT_HOST_BASE);
 
     $this->filter   = new RiminderFilter($this);
     $this->profile  = new RiminderProfile($this);

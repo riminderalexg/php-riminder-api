@@ -44,30 +44,32 @@
       $query['date_start'] = RiminderProfile::argDateToTimestamp($query['date_start']);
       $query['date_end'] = RiminderProfile::argDateToTimestamp($query['date_end']);
       $resp = $this->riminder->_rest->get("profiles", $query);
-      file_put_contents("zap", $resp->response);
+      file_put_contents("zap", $resp->getBody());
       // var_dump($resp);
 
-      return json_decode($resp)['data'];
+      return json_decode($resp->getBody(), true)['data'];
     }
 
     /*
     *  profile.add add a profile to your account. $file field has to be the full
     *  file in a string.
     */
-    public function add($source_id, $file_path, $profile_reference, $reception_date, $training_metadata=null) {
+    public function add($source_id, $file_path, $profile_reference=null, $reception_date=null, $training_metadata=null) {
       $bodyParams = array (
         'source_id'           => $source_id,
-        'file'                => file_get_contents($file_path),
         'profile_reference'   => $profile_reference,
         'timestamp_reception' => RiminderProfile::argDateToTimestamp($reception_date, 'reception_date'),
       );
-      // print($bodyParams['file']);
-      // throw new \Exception("Error Processing Request", 1);
 
       RequestBodyUtils::add_if_not_null($bodyParams, 'training_metadata', $training_metadata);
-      $resp = $this->riminder->_rest->post("profile", $bodyParams);
+      RequestBodyUtils::add_if_not_null($bodyParams, 'profile_reference', $profile_reference);
+      RequestBodyUtils::add_if_not_null($bodyParams, 'timestamp_reception', $reception_date);
+      if (array_key_exists('timestamp_reception', $bodyParams)){
+        $bodyParams['timestamp_reception'] =  RiminderProfile::argDateToTimestamp($reception_date, 'reception_date');
+      }
+      $resp = $this->riminder->_rest->postFile("profile", $bodyParams, $file_path);
 
-      return json_decode($resp)['data'];
+      return json_decode($resp->getBody(), true)['data'];
     }
 
     public function get($profile_id, $source_id, $profile_reference=null) {
@@ -77,7 +79,7 @@
       $query = array_merge($query, RequestBodyUtils::selectIdRef('profile', $profile_id, $profile_reference));
       $resp = $this->riminder->_rest->get("profile", $query);
 
-      return json_decode($resp)['data'];
+      return json_decode($resp->getBody(), true)['data'];
     }
 
     public function getDocuments($profile_id, $source_id, $profile_reference=null) {
@@ -87,7 +89,7 @@
       $query = array_merge($query, RequestBodyUtils::selectIdRef('profile', $profile_id, $profile_reference));
       $resp = $this->riminder->_rest->get("profile/documents", $query);
 
-      return json_decode($resp)['data'];
+      return json_decode($resp->getBody(), true)['data'];
     }
 
     public function getParsing($profile_id, $source_id, $profile_reference=null) {
@@ -97,7 +99,7 @@
       $query = array_merge($query, RequestBodyUtils::selectIdRef('profile', $profile_id, $profile_reference));
       $resp = $this->riminder->_rest->get("profile/parsing", $query);
 
-      return json_decode($resp)['data'];
+      return json_decode($resp->getBody(), true)['data'];
     }
 
     public function getScoring($profile_id, $source_id, $profile_reference=null) {
@@ -107,7 +109,7 @@
       $query = array_merge($query, RequestBodyUtils::selectIdRef('profile', $profile_id, $profile_reference));
       $resp = $this->riminder->_rest->get("profile/scoring", $query);
 
-      return json_decode($resp)['data'];
+      return json_decode($resp->getBody(), true)['data'];
     }
 
     public function updateStage($profile_id, $source_id, $filter_id, $stage,
@@ -120,7 +122,7 @@
       $bodyParams = array_merge($bodyParams, RequestBodyUtils::selectIdRef('filter', $filter_id, $filter_reference));
       $resp = $this->riminder->_rest->patch("profile/stage", $bodyParams);
 
-      return json_decode($resp)['data'];
+      return json_decode($resp->getBody(), true)['data'];
     }
 
     public function updateRating($profile_id, $source_id, $filter_id, $rating,
@@ -133,7 +135,7 @@
       $bodyParams = array_merge($bodyParams, RequestBodyUtils::selectIdRef('filter', $filter_id, $filter_reference));
       $resp = $this->riminder->_rest->patch("profile/rating", $bodyParams);
 
-      return json_decode($resp)['data'];
+      return json_decode($resp->getBody(), true)['data'];
     }
 
   }

@@ -8,10 +8,47 @@ use PHPUnit\Framework\TestCase;
 
 final class RiminderTestProfile extends TestCase {
 
-  private static $testSourceId = null;
-  private static $testProfileId = null;
-  private static $lastValidProfileId = null;
-  private static $lastValidSourceId = null;
+  private  $testSourceId = null;
+  private  $testProfileId = null;
+  private static $lastValidProfileId;
+  private static $lastValidSourceId;
+
+  private function useApiFuncWithValidProfile($profile_ids, $profileFunc) {
+    foreach ($profile_ids as $profile_idPair) {
+      $err;
+      $profile_id = $profile_idPair['profile_id'];
+      $source_id = $profile_idPair['source_id'];
+      $getProfile = function () use ($profileFunc, $profile_id, $source_id) {  return $profileFunc($profile_id, $source_id); };
+      $resp = TestHelper::useApiFuncWithIgnoredErr($this, $getProfile);
+      if (!empty($resp)) {
+        self::$lastValidProfileId = $profile_id;
+        self::$lastValidSourceId = $source_id;
+        return $resp;
+      }
+      $err = TestHelper::getLastError();
+      $isResponseExp = $err instanceof RiminderApiResponseException;
+      if (!$isResponseExp || $err->getHttpCode() != 403) {
+        $this->fail('Api Response Exception on profile retrieving: ' . $err);
+      }
+    }
+    return null;
+  }
+
+  private function getValidProfilePairId($api) {
+    $profile_ids = $this->getSomeProfileIdsPair($api);
+
+    foreach ($profile_ids as $profile_idPair) {
+      $profile_id = $profile_idPair['profile_id'];
+      $source_id = $profile_idPair['source_id'];
+      $profileGet = function () use ($api, $profile_id, $source_id)
+        { return $api->profile->get($profile_id, $source_id); };
+      $resp = TestHelper::useApiFuncWithIgnoredErr($this, $profileGet);
+      if (!empty($resp)) {
+        return $profile_idPair;
+      }
+    }
+    return null;
+  }
 
   private static function isFiltered($source, $field, $filters){
     if (empty($filters)) {
@@ -59,7 +96,8 @@ final class RiminderTestProfile extends TestCase {
       $api->Fields->SOURCE_IDS => $source_ids,
       $api->Fields->DATE_START => $start->getTimestamp(),
       'date_end' => $end,
-      'limit'    => 100
+      'limit'    => 100,
+      $api->Fields->SORT_BY => $api->Sort_by->RANKING
      );
     $getProfiles = function () use ($api, $args)
      { return $api->profile->getProfiles($args); };
@@ -154,6 +192,7 @@ final class RiminderTestProfile extends TestCase {
         $api->Fields->SOURCE_IDS => $source_ids,
         $api->Fields->DATE_START => $start->getTimestamp(),
         'date_end' => $end->getTimestamp(),
+        $api->Fields->SORT_BY => $api->Sort_by->RANKING
        );
       $getProfiles = function () use ($api, $args)
        { return $api->profile->getProfiles($args); };
@@ -187,6 +226,7 @@ final class RiminderTestProfile extends TestCase {
         $api->Fields->SOURCE_IDS => $source_ids,
         $api->Fields->DATE_START => $start->getTimestamp(),
         'date_end' => $end,
+       $api->Fields->SORT_BY => $api->Sort_by->RANKING
        );
       $getProfiles = function () use ($api, $args)
        { return $api->profile->getProfiles($args); };
@@ -211,6 +251,7 @@ final class RiminderTestProfile extends TestCase {
         $api->Fields->SOURCE_IDS => $source_ids,
         $api->Fields->DATE_START => $start,
         'date_end' => $end,
+        $api->Fields->SORT_BY => $api->Sort_by->RANKING
        );
       $getProfiles = function () use ($api, $args)
        { return $api->profile->getProfiles($args); };
@@ -227,26 +268,7 @@ final class RiminderTestProfile extends TestCase {
       TestHelper::assertArrayHasKeys($this, $resp['profiles'][0]['source'], $refSourceKeys);
   }
 
-  private function useApiFuncWithValidProfile($profile_ids, $profileFunc) {
-    foreach ($profile_ids as $profile_idPair) {
-      $err;
-      $profile_id = $profile_idPair['profile_id'];
-      $source_id = $profile_idPair['source_id'];
-      $getProfile = function () use ($profileFunc, $profile_id, $source_id) {  return $profileFunc($profile_id, $source_id); };
-      $resp = TestHelper::useApiFuncWithIgnoredErr($this, $getProfile);
-      if (!empty($resp)) {
-        self::$lastValidProfileId = $profile_id;
-        self::$lastValidSourceId = $source_id;
-        return $resp;
-      }
-      $err = TestHelper::getLastError();
-      $isResponseExp = $err instanceof RiminderApiResponseException;
-      if (!$isResponseExp || $err->getHttpCode() != 403) {
-        $this->fail('Api Response Exception on profile retrieving: ' . $err);
-      }
-    }
-    return null;
-  }
+
 
   public function testGet(): void {
       $api = new Riminder(TestHelper::getSecret());
@@ -353,10 +375,11 @@ final class RiminderTestProfile extends TestCase {
       $api = new Riminder(TestHelper::getSecret());
       $refKeys = array('filter_id',
         'filter_reference',
-        'name',
         'score',
         'rating',
         'stage',
+        'filter_id',
+        'template'
         );
       $profile_ids = $this->getSomeProfileIdsPair($api);
       $profileGetScoring = function ($profile_id, $source_id) use ($api)
@@ -384,15 +407,16 @@ final class RiminderTestProfile extends TestCase {
       $refKeys = array('profile_reference', 'file_id', 'file_name', 'file_size', 'extension', 'date_reception');
       $now =  new DateTime();
       $filterType = array('api');
-      $filterName = array('sdk_test');
+      $filterName = TestHelper::getSourceTestName();
+
       $source_ids = $this->getSomeNotSharedSourceIds($api, $filterType, $filterName);
       if (empty($source_ids)){
         $this->markTestSkipped('no api sources with this key');
       }
-      self::$testSourceId = $source_ids[0];
       $source_id = $source_ids[0];
       $file = "./test/test_cv.pdf";
       $profile_ref = strval(rand(0, 99999));
+      // $profile_ref = 10;
 
       $addProfile = function () use ($api, $now, $source_id, $file, $profile_ref)
       { return $api->profile->add($source_id, $file, $profile_ref, $now->getTimestamp()); };
@@ -407,17 +431,18 @@ final class RiminderTestProfile extends TestCase {
 
   public function testUpdateStage(): void {
     $api = new Riminder(TestHelper::getSecret());
-    $stage = "YES";
+    $stage = "NO";
     $refKeys = array('profile_id', 'profile_reference', 'filter_id', 'filter_reference', 'stage');
 
-    if (empty(self::$lastValidSourceId) || empty(self::$lastValidProfileId)){
+    $profile_pair = $this->getValidProfilePairId($api);
+    if (empty($profile_pair)) {
       $this->markTestSkipped('No valid profile, abotring test');
     }
-    $profile_id = self::$lastValidProfileId;
-    $source_id = self::$lastValidSourceId;
-    $getfilters = function () use ($api, $profile_id, $source_id)
-      {  return $api->profile->getfilters($profile_id, $source_id); };
-    $filters = TestHelper::useApiFuncWithReportedErrAsSkip($this, $getfilters);
+    $profile_id = $profile_pair['profile_id'];
+    $source_id = $profile_pair['source_id'];
+    $getScoring = function () use ($api, $profile_id, $source_id)
+      {  return $api->profile->getScoring($profile_id, $source_id); };
+    $filters = TestHelper::useApiFuncWithReportedErrAsSkip($this, $getScoring);
     if (empty($filters)) {
       $this->markTestSkipped('No filters retrieved!');
     }
@@ -427,7 +452,6 @@ final class RiminderTestProfile extends TestCase {
     $updateProfile = function () use ($api, $profile_id, $source_id, $filter_id, $stage)
       {  return $api->profile->updateStage($profile_id, $source_id, $filter_id, $stage); };
     $resp = TestHelper::useApiFuncWithReportedErr($this, $updateProfile);
-    var_dump($resp);
     TestHelper::assertArrayHasKeys($this, $resp, $refKeys);
 
     $this->assertEquals($profile_id, $resp['profile_id']);
@@ -438,17 +462,18 @@ final class RiminderTestProfile extends TestCase {
 
     public function testUpdateRating(): void {
       $api = new Riminder(TestHelper::getSecret());
-      $rating = 2;
+      $rating = 0;
       $refKeys = array('profile_id', 'profile_reference', 'filter_id', 'filter_reference', 'rating');
 
-      if (empty(self::$lastValidSourceId) || empty(self::$lastValidProfileId)){
+      $profile_pair = $this->getValidProfilePairId($api);
+      if (empty($profile_pair)) {
         $this->markTestSkipped('No valid profile, abotring test');
       }
-      $profile_id = self::$lastValidProfileId;
-      $source_id = self::$lastValidSourceId;
-      $getfilters = function () use ($api, $profile_id, $source_id)
-        {  return $api->profile->getfilters($profile_id, $source_id); };
-      $filters = TestHelper::useApiFuncWithReportedErrAsSkip($this, $getfilters);
+      $profile_id = $profile_pair['profile_id'];
+      $source_id = $profile_pair['source_id'];
+      $getScoring = function () use ($api, $profile_id, $source_id)
+        {  return $api->profile->getScoring($profile_id, $source_id); };
+      $filters = TestHelper::useApiFuncWithReportedErrAsSkip($this, $getScoring);
       if (empty($filters)) {
         $this->markTestSkipped('No filters retrieved!');
       }
@@ -458,7 +483,6 @@ final class RiminderTestProfile extends TestCase {
       $updateProfile = function () use ($api, $profile_id, $source_id, $filter_id, $rating)
         {  return $api->profile->updateRating($profile_id, $source_id, $filter_id, $rating); };
       $resp = TestHelper::useApiFuncWithReportedErr($this, $updateProfile);
-      var_dump($resp);
       TestHelper::assertArrayHasKeys($this, $resp, $refKeys);
 
       $this->assertEquals($profile_id, $resp['profile_id']);

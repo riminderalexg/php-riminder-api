@@ -2,9 +2,14 @@
   class TestHelper
   {
     static public $APISECRET = "";
+    static public $SOURCE_TEST_NAME = [];
 
     static public function getSecret() {
       return self::$APISECRET;
+    }
+
+    static public function getSourceTestName() {
+      return self::$SOURCE_TEST_NAME;
     }
 
     static private $lastError = null;

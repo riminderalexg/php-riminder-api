@@ -2,7 +2,7 @@
   class TestHelper
   {
     static public $APISECRET = "";
-    static public $SOURCE_TEST_NAME = [];
+    static public $SOURCE_TEST_NAME = [''];
 
     static public function getSecret() {
       return self::$APISECRET;
@@ -54,6 +54,8 @@
         $testCase->fail('Test failed cause of invalid response: ' . $e);
       } catch (\RiminderApiArgumentException $e) {
         $testCase->fail('Test failed cause of invalid argument: ' . $e);
+      } catch (\RiminderApiProfileUploadException $e) {
+        $testCase->fail('Test failed cause of failed upload: ' . $e);
       } catch (\RiminderApiException $e) {
         $testCase->markTestSkipped('Test skipped cause of: ' . $e);
       }

@@ -51,4 +51,38 @@ class RiminderApiResponseException extends RiminderApiException
 }
 
 
+class RiminderApiProfileUploadException extends RiminderApiException {
+  function __construct(array $profileUploadFailedPairs, $profileUploadSucess, $expCode = 5) {
+    $this->failed_pairs = $profileUploadFailedPairs;
+    $this->success_pairs = $profileUploadSucess;
+    $message = 'Error while upload files: ';
+    $is_first = true;
+    foreach ($this->failed_pairs as $failed_filename => $related_exp) {
+      if (!$is_first){
+        $message = $message." --- ";
+      }
+      $message = $message.$failed_filename.": ".$related_exp->getMessage();
+      $is_first = false;
+    }
+    parent::__construct($message, $expCode);
+  }
+
+  public function getFailedFiles() {
+    $res = [];
+    foreach ($this->failed_pairs as $failed_filename => $related_exp) {
+      $res[] = $failed_filename;
+    }
+    return $res;
+  }
+
+  public function getFailedFilesWithTheirExp() {
+    return $this->failed_pairs;
+  }
+
+  public function getSuccefullySendedFiles() {
+    return $this->success_pairs;
+  }
+}
+
+
  ?>

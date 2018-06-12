@@ -64,6 +64,10 @@ If an error occurs while an operation an exception of type `RiminderApiException
   ```php
   RiminderClient->profile->add($source_id, $file_path, $profile_reference, $timestamp_reception, $training_metadata)
   ```
+  * Add all resume from a directory to a sourced id, `$recurs` is to enable recursive mode :
+  ```php
+  RiminderClient->profile->add_dir($source_id, $file_path, $recurs, $timestamp_reception, $training_metadata)
+  ```
   * Get the profile information associated with both profile id and source id :
   ```php
   RiminderClient->profile->get($profile_id, $source_id, $profile_reference)

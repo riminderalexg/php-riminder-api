@@ -414,7 +414,7 @@ final class RiminderTestProfile extends TestCase {
         $this->markTestSkipped('no api sources with this key');
       }
       $source_id = $source_ids[0];
-      $file = "./test/test_cv.pdf";
+      $file = "./test/assets/test_cv.pdf";
       $profile_ref = strval(rand(0, 99999));
       // $profile_ref = 10;
 
@@ -427,6 +427,38 @@ final class RiminderTestProfile extends TestCase {
       }
       TestHelper::assertArrayHasKeys($this, $resp, $refKeys);
       TestHelper::assertDateObj($this, $resp['date_reception']);
+  }
+
+  public function testAdd_dir():void {
+      $api = new Riminder(TestHelper::getSecret());
+      $refKeys = array('profile_reference', 'file_id', 'file_name', 'file_size', 'extension', 'date_reception');
+      $now =  new DateTime();
+      $filterType = array('api');
+      $filterName = TestHelper::getSourceTestName();
+
+      $source_ids = $this->getSomeNotSharedSourceIds($api, $filterType, $filterName);
+      if (empty($source_ids)){
+        $this->markTestSkipped('no api sources with this key');
+      }
+      $source_id = $source_ids[0];
+      $file = "./test/assets";
+      $profile_ref = strval(rand(0, 99999));
+
+      $addProfile = function () use ($api, $now, $source_id, $file, $profile_ref)
+      { return $api->profile->add_dir($source_id, $file, true, $now->getTimestamp()); };
+      $resp = TestHelper::useApiFuncWithReportedErr($this, $addProfile);
+      if (empty($resp)) {
+        $this->fail('No file sended!');
+        return;
+      }
+      if (count($resp) < 2) {
+        $this->fail('Some files has not been sended!');
+        return;
+      }
+      foreach ($resp as $oner) {
+        TestHelper::assertArrayHasKeys($this, $oner, $refKeys);
+        TestHelper::assertDateObj($this, $oner['date_reception']);
+      }
   }
 
   public function testUpdateStage(): void {

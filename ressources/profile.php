@@ -4,8 +4,48 @@
 
   class RiminderProfile
   {
+    const VALID_EXT = ['pdf', 'png', 'jpg', 'doc', 'docx', 'rtf', 'dotx'];
+    const INVALID_FILENAME = ['.', '..'];
+
     public function __construct($parent) {
       $this->riminder = $parent;
+    }
+
+    private static function is_extensionValid(string $file) {
+      $file_ext = pathinfo($file, PATHINFO_EXTENSION);
+
+      if (in_array($file_ext, self::VALID_EXT)) {
+        return true;
+      }
+      return false;
+    }
+
+    private static function join_2_path($a, $b) {
+      $res = $a;
+      if ($a[strlen($a) - 1] != '/' && $b[0] != '/'){
+        $res = $res.'/';
+      }
+      $res = $res.$b;
+      return $res;
+    }
+
+    private static function getFileToSend($path, $recurs) {
+      $dir_paths = scandir($path);
+      $res = [];
+
+      foreach ($dir_paths as $dir_path) {
+        $true_path = self::join_2_path($path, $dir_path);
+        if (is_dir($true_path) && $recurs) {
+            if (!in_array($dir_path, self::INVALID_FILENAME)){
+              $res = array_merge($res, self::getFileToSend($true_path, $recurs));
+              continue;
+            }
+        }
+        if (self::is_extensionValid($dir_path)) {
+          $res[] = $true_path;
+        }
+      }
+      return $res;
     }
 
     private static function serializeSourceIds($source_ids) {
@@ -50,10 +90,6 @@
       return json_decode($resp->getBody(), true)['data'];
     }
 
-    /*
-    *  profile.add add a profile to your account. $file field has to be the full
-    *  file in a string.
-    */
     public function add($source_id, $file_path, $profile_reference=null, $reception_date=null, $training_metadata=null) {
       $bodyParams = array (
         'source_id'           => $source_id
@@ -68,6 +104,28 @@
       $resp = $this->riminder->_rest->postFile("profile", $bodyParams, $file_path);
 
       return json_decode($resp->getBody(), true)['data'];
+    }
+
+    public function add_dir($source_id, $dir_path, $recurs=false, $reception_date=null, $training_metadata=null) {
+      if (!is_dir($dir_path)) {
+        throw new \RiminderApiArgumentException("'".$dir_path."' is not a directory.", 1);
+      }
+      $files_path = self::getFileToSend($dir_path, $recurs);
+      $failed_files = [];
+      $succeed_files = [];
+
+      foreach ($files_path as $file_path) {
+        try {
+          $resp = self::add($source_id, $file_path, null, $reception_date, $training_metadata);
+          $succeed_files[$file_path] = $resp;
+        } catch (\Exception $e) {
+          $failed_files[$file_path] = $e;
+        }
+      }
+      if (!empty($failed_files)) {
+        throw new \RiminderApiProfileUploadException($failed_files, $succeed_files);
+      }
+      return $succeed_files;
     }
 
     public function get($profile_id, $source_id, $profile_reference=null) {

@@ -64,10 +64,12 @@ If an error occurs while an operation an exception of type `RiminderApiException
   ```php
   RiminderClient->profile->add($source_id, $file_path, $profile_reference, $timestamp_reception, $training_metadata)
   ```
-  * Add all resume from a directory to a sourced id, `$recurs` is to enable recursive mode :
+  * Add all resume from a directory to a sourced id, use `$recurs` to enable recursive mode :
   ```php
   RiminderClient->profile->add_dir($source_id, $file_path, $recurs, $timestamp_reception, $training_metadata)
   ```
+  It returns an array like: `result[filename] = server_reponse`.
+  Can throw `RiminderApiProfileUploadException`
   * Get the profile information associated with both profile id and source id :
   ```php
   RiminderClient->profile->get($profile_id, $source_id, $profile_reference)
@@ -108,5 +110,15 @@ If an error occurs while an operation an exception of type `RiminderApiException
   * `RiminderClient->Order_by`  Contain constants that represent order options.
   * `RiminderClient->Seniority`  Contain constants that represent profile seniority.
   * `RiminderClient->Training_metadata`  Contain constants that represent metadata fields for profile adding.
+* # Exception
+  * `RiminderApiException` parent of all thrown exception. Thrown when an error occurs.
+  * `RiminderApiResponseException` thrown when response http code is not a valid one.
+    * `getHttpCode()` to get the http code of the response.
+    * `getHttpMessage()` to get the reason of response error.
+  * `RiminderApiArgumentException` thrown when an invalid argument is pass to a method
+  * `RiminderApiProfileUploadException` thrown when an error occurs during file upload.
+    * `getFailedFiles()` to get not sended files list.
+    * `getFailedFilesWithTheirExp()` to get not sended files with their exception (like: `exception_occured_during_tranfert = failed_file_list[filename]`)
+    * `getSuccefullySendedFiles()` to get successfuly sended files with their response from server (like: `server_reponse_for_sucessful_upload = sucess_file_list[filename]`)
 
 For details about method's arguments and return values see [api's documentation](https://developers.riminder.net/v1.0/reference#source)

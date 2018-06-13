@@ -2,7 +2,6 @@
   /**
    *
    */
-  require __DIR__ . '/../vendor/autoload.php';
   require_once 'RiminderApiException.php';
 
   class ReqExpHandler

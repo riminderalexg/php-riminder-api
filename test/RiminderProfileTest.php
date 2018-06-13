@@ -693,10 +693,8 @@ final class RiminderTestProfile extends TestCase {
         $this->markTestSkipped('no api sources with this key');
       }
       $source_id = $source_ids[0];
-      // $file = "./test/assets/test_cv.pdf";
-      // $profile_ref = strval(rand(0, 99999));
-      $file = "/home/alexandre/code/rimindapi/love/for_othmane/pomme/cv_resume_word_template_906.pdf";
-      $profile_ref = 'test_foobar_zap';
+      $file = "./test/assets/test_cv.pdf";
+      $profile_ref = strval(rand(0, 99999));
 
       $addProfile = function () use ($api, $now, $source_id, $file, $profile_ref)
       { return $api->profile->add($source_id, $file, $profile_ref, $now->getTimestamp()); };

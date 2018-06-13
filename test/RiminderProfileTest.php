@@ -707,6 +707,7 @@ final class RiminderTestProfile extends TestCase {
       }
       TestHelper::assertArrayHasKeys($this, $resp, $refKeys);
       TestHelper::assertDateObj($this, $resp['date_reception']);
+      $this->assertEquals($resp['profile_reference'], $profile_ref);
   }
 
   public function testAdd_dir():void {

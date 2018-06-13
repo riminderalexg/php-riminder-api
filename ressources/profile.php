@@ -169,7 +169,7 @@
     }
 
     public function updateStage($profile_id, $source_id, $filter_id, $stage,
-                              $filter_reference=null, $profile_reference=null) {
+                              $profile_reference=null, $filter_reference=null) {
       $bodyParams = array(
         'stage'       => $stage,
         'source_id'   => $source_id,
@@ -182,7 +182,7 @@
     }
 
     public function updateRating($profile_id, $source_id, $filter_id, $rating,
-                                $filter_reference=null, $profile_reference=null) {
+                                $profile_reference=null, $filter_reference=null) {
       $bodyParams = array(
         'rating'       => $rating,
         'source_id'   => $source_id,

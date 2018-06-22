@@ -103,13 +103,36 @@ If an error occurs while an operation an exception of type `RiminderApiException
    ```php
    RiminderClient->source->get($source_id)
    ```
-* # Constant
-  * `RiminderClient->Fields` Contain constants to fill profile's `args` array
-  * `RiminderClient->Stage`  Contain constants that represent profile stage.
-  * `RiminderClient->Sort_by`  Contain constants that represent sorting options.
-  * `RiminderClient->Order_by`  Contain constants that represent order options.
-  * `RiminderClient->Seniority`  Contain constants that represent profile seniority.
-  * `RiminderClient->Training_metadata`  Contain constants that represent metadata fields for profile adding.
+* # webhook
+This package supplies webhook support as well.
+  * Check for webhook integration:
+  ```php
+  RiminderClient->webhook->check();
+  ```
+  * Set an handler for an event (listed with RiminderEvents constants)
+  ```php
+  RiminderClient->webhook->setHandler($eventName, $callback);
+  ```
+  * Check if the event has an handler
+  ```php
+  RiminderClient->webhook->isHandlerPresent($eventName);
+  ```
+  * Remove handler for an event
+  ```php
+  RiminderClient->webhook->removeHandler($eventName);
+  ```
+  * Handle the incoming webhook request, you need to put as argument HTTP_RIMINDER_SIGNATURE as an argument.
+  ```php
+  RiminderClient->webhook->handleRequest($encoded_datas);
+  ```
+* # Constants
+  * `RiminderFields` Contains to fill profile's `args` array for /profiles constants.
+  * `RiminderStage`  Contains profile stage constants.
+  * `RiminderSort_by`  Contains sorting options constants.
+  * `RiminderOrder_by`  Contains order options constants.
+  * `RiminderSeniority`  Contains profile seniority constants.
+  * `RiminderTraining_metadata`  Contain metadata fields for profile adding constants.
+  * `RiminderEvents` Contains event names constans.
 * # Exception
   * `RiminderApiException` parent of all thrown exception. Thrown when an error occurs.
   * `RiminderApiResponseException` thrown when response http code is not a valid one.

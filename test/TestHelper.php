@@ -2,10 +2,15 @@
   class TestHelper
   {
     static public $APISECRET = "";
+    static public $WEBHOOKSECRET = "totalynotfake";
     static public $SOURCE_TEST_NAME = [];
 
     static public function getSecret() {
       return self::$APISECRET;
+    }
+
+    static public function getWebhookSecret() {
+      return self::$WEBHOOKSECRET;
     }
 
     static public function getSourceTestName() {
@@ -87,6 +92,21 @@
       }
       $testCase->fail('Expected an error of type ' . $expectedExp);
       return null;
+    }
+
+    static public function generateWebhookRequest($type) {
+      $data = [
+        'type'    => $type,
+        'message' => 'something good append',
+        'profile' => ['profile_id' => 1, 'profile_reference' => 'hi']
+        ];
+      $json_data   = json_encode($data);
+      $encoded_sig = hash_hmac('sha256',$json_data, self::$WEBHOOKSECRET, true);
+      $signature   = base64_encode($encoded_sig).".".base64_encode($json_data);
+
+      $res     = array('HTTP_RIMINDER_SIGNATURE' => $signature);
+
+      return $res;
     }
   }
  ?>

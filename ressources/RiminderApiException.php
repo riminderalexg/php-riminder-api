@@ -20,6 +20,15 @@ class RiminderApiArgumentException extends RiminderApiException
     }
 }
 
+class RiminderApiWebhookException extends RiminderApiException
+{
+
+    function __construct($message, $expCode = 0)
+    {
+        parent::__construct($message, $expCode);
+    }
+}
+
 /**
  * RiminderApiResponseException occurs when the server responde an error code.
  * It containt the code and the reason.

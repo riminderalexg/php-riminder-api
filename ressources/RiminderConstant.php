@@ -2,56 +2,68 @@
 
     class RiminderSeniority
     {
-      public $SENIOR = 'senior';
-      public $JUNIOR = 'junior';
-      public $ALL    = 'all';
+      const SENIOR = 'senior';
+      const JUNIOR = 'junior';
+      const ALL    = 'all';
     }
 
     class RiminderStage
     {
-      public $ALL   = null;
-      public $NEW   = 'new';
-      public $YES   = 'yes';
-      public $LATER = 'later';
-      public $NO    = 'no';
+      const ALL   = null;
+      const NEW   = 'new';
+      const YES   = 'yes';
+      const LATER = 'later';
+      const NO    = 'no';
     }
 
     class RiminderSort_by
     {
-      public $RECEPTION = 'reception';
-      public $RANKING   = 'ranking';
+      const RECEPTION = 'reception';
+      const RANKING   = 'ranking';
     }
 
     class RiminderOrder_by
     {
-      public $DESC = 'desc';
-      public $ASC  = 'asc';
+      const DESC = 'desc';
+      const ASC  = 'asc';
     }
 
     class RiminderField
     {
-      public $SOURCE_IDS       = 'source_ids';
-      public $SENIORITY        = 'seniority';
-      public $FILTER_ID        = 'filter_id';
-      public $FILTER_REFERENCE = 'filter_reference';
-      public $STAGE            = 'stage';
-      public $RATING           = 'rating';
-      public $DATE_START       = 'date_start';
-      public $DATE_END         = 'date_end';
-      public $PAGE             = 'page';
-      public $LIMIT            = 'limit';
-      public $SORT_BY          = 'sort_by';
-      public $ORDER_BY         = 'order_by';
+      const SOURCE_IDS       = 'source_ids';
+      const SENIORITY        = 'seniority';
+      const FILTER_ID        = 'filter_id';
+      const FILTER_REFERENCE = 'filter_reference';
+      const STAGE            = 'stage';
+      const RATING           = 'rating';
+      const DATE_START       = 'date_start';
+      const DATE_END         = 'date_end';
+      const PAGE             = 'page';
+      const LIMIT            = 'limit';
+      const SORT_BY          = 'sort_by';
+      const ORDER_BY         = 'order_by';
     }
 
     class RiminderTrainingMetaData
     {
-      public $FILTER_ID = 'filter_id';
-      public $FILTER_REFERENCE = 'filter_reference';
-      public $STAGE = 'stage';
-      public $STAGE_TIMESTAMP = 'stage_timestamp';
-      public $RATING = 'rating';
-      public $RATING_TIMESTAMP = 'rating_timestamp';
+      const FILTER_ID = 'filter_id';
+      const FILTER_REFERENCE = 'filter_reference';
+      const STAGE = 'stage';
+      const STAGE_TIMESTAMP = 'stage_timestamp';
+      const RATING = 'rating';
+      const RATING_TIMESTAMP = 'rating_timestamp';
+    }
+
+    class RiminderEvents
+    {
+      const PROFILE_PARSE_SUCCESS = 'profile.parse.success';
+      const PROFILE_PARSE_ERROR = 'profile.parse.error';
+      const PROFILE_SCORE_SUCCESS = 'profile.score.success';
+      const PROFILE_SCORE_ERROR = 'profile.score.error';
+      const FILTER_TRAIN_SUCCESS = 'filter.train.success';
+      const FILTER_TRAIN_ERROR = 'filter.train.error';
+      const FILTER_SCORE_SUCCESS = 'filter.score.success';
+      const FILTER_SCORE_ERROR = 'filter.score.error';
     }
   /**
    *

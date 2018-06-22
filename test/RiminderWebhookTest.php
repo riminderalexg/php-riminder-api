@@ -32,5 +32,20 @@ final class RiminderTestWebhook extends TestCase {
     TestHelper::assertArrayHasKeys($this, self::$decoded_request, $ref_keys);
     TestHelper::assertArrayHasKeys($this, self::$decoded_request['profile'], $profile_ref_keys);
   }
+
+  public function testCheck(): void {
+      $api = new Riminder(TestHelper::getSecret());
+      $refKeys = array('team_name', 'webhook_url');
+
+      $checkWebhook = function () use ($api) { return $api->webhook->check(); };
+
+      $resp = TestHelper::useApiFuncWithReportedErr($this, $checkWebhook);
+      if (empty($resp)) {
+        $this->markTestSkipped('No datas retrieved!');
+        return;
+      }
+      TestHelper::assertArrayHasKeys($this, $resp, $refKeys);
+  }
+
 }
  ?>

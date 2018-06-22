@@ -90,7 +90,7 @@
       return json_decode($resp->getBody(), true)['data'];
     }
 
-    public function add($source_id, $file_path, $profile_reference=null, $reception_date=null, $training_metadata=null) {
+    public function post_profile($source_id, $file_path, $profile_reference=null, $reception_date=null, $training_metadata=null) {
       $bodyParams = array (
         'source_id'           => $source_id
       );
@@ -106,7 +106,7 @@
       return json_decode($resp->getBody(), true)['data'];
     }
 
-    public function add_dir($source_id, $dir_path, $recurs=false, $reception_date=null, $training_metadata=null) {
+    public function post_profiles($source_id, $dir_path, $recurs=false, $reception_date=null, $training_metadata=null) {
       if (!is_dir($dir_path)) {
         throw new \RiminderApiArgumentException("'".$dir_path."' is not a directory.", 1);
       }
@@ -128,7 +128,7 @@
       return $succeed_files;
     }
 
-    public function get($profile_id, $source_id, $profile_reference=null) {
+    public function getProfile($profile_id, $source_id, $profile_reference=null) {
       $query = array(
         'source_id'  => $source_id
       );

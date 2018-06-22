@@ -33,11 +33,11 @@ final class RiminderTestWebhook extends TestCase {
     TestHelper::assertArrayHasKeys($this, self::$decoded_request['profile'], $profile_ref_keys);
   }
 
-  public function testCheck(): void {
+  public function testPostCheck(): void {
       $api = new Riminder(TestHelper::getSecret());
-      $refKeys = array('team_name', 'webhook_url');
+      $refKeys = array('team_name', 'webhook_url', 'webhook_id');
 
-      $checkWebhook = function () use ($api) { return $api->webhook->check(); };
+      $checkWebhook = function () use ($api) { return $api->webhook->postCheck(); };
 
       $resp = TestHelper::useApiFuncWithReportedErr($this, $checkWebhook);
       if (empty($resp)) {

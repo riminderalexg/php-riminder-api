@@ -33,7 +33,7 @@ require __DIR__ . '/vendor/autoload.php';
 // Authentication to api
 $riminderClient = new Riminder('yourShinnyKey');
 
-$profile = $riminderClient->profile->get('102b6aa635fnf8ar70e7888ee63c0jde0c753dtg')
+$profile = $riminderClient->profile->getProfile('102b6aa635fnf8ar70e7888ee63c0jde0c753dtg')
 $name = $profile['name']
 $profile_id = $profile['profile_id']
 
@@ -52,7 +52,7 @@ If an error occurs while an operation an exception of type `RiminderApiException
   ```
   * Get the filter information associated with filter id :
   ```php
-  RiminderClient->filter->get($filter_id, $filter_reference)
+  RiminderClient->filter->getFilter($filter_id, $filter_reference)
   ```
 * # Profiles
   * Retrieve the profiles information associated with some source ids :
@@ -62,17 +62,17 @@ If an error occurs while an operation an exception of type `RiminderApiException
   `$args` is a array that contains all query parameters you need.
   * Add a resume to a sourced id :
   ```php
-  RiminderClient->profile->add($source_id, $file_path, $profile_reference, $timestamp_reception, $training_metadata)
+  RiminderClient->profile->postProfile($source_id, $file_path, $profile_reference, $timestamp_reception, $training_metadata)
   ```
   * Add all resume from a directory to a sourced id, use `$recurs` to enable recursive mode :
   ```php
-  RiminderClient->profile->add_dir($source_id, $file_path, $recurs, $timestamp_reception, $training_metadata)
+  RiminderClient->profile->postProfiles($source_id, $file_path, $recurs, $timestamp_reception, $training_metadata)
   ```
   It returns an array like: `result[filename] = server_reponse`.
   Can throw `RiminderApiProfileUploadException`
   * Get the profile information associated with both profile id and source id :
   ```php
-  RiminderClient->profile->get($profile_id, $source_id, $profile_reference)
+  RiminderClient->profile->getProfile($profile_id, $source_id, $profile_reference)
   ```
   * Retrieve the profile documents associated with both profile id and source id :
   ```php
@@ -101,7 +101,7 @@ If an error occurs while an operation an exception of type `RiminderApiException
   ```
   * Get the source information associated with source id:
    ```php
-   RiminderClient->source->get($source_id)
+   RiminderClient->source->getSource($source_id)
    ```
 * # webhook
 This package supplies webhook support as well.

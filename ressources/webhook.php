@@ -21,29 +21,32 @@
       ];
     }
 
-    public function check() {
+    public function postCheck() {
       $resp = $this->riminder->_rest->post("webhook/check");
 
       return json_decode($resp->getBody(), true);
     }
 
-    public function setHandler($eventName, $func) {
+    public function setHandler($eventName, $callback) {
       if (!array_key_exists($eventName, $this->handlers)){
-        throw new \RiminderApiArgumentException($eventName."is not a valid event.");
+        throw new \RiminderApiArgumentException($eventName." is not a valid event.");
       }
-      $this->handlers[$eventName] = $func;
+      if (!is_callable($callback)){
+        throw new \RiminderApiArgumentException($callback." is not callable.");
+      }
+      $this->handlers[$eventName] = $callback;
     }
 
     public function isHandlerPresent($eventName) {
       if (!array_key_exists($eventName, $this->handlers)){
-        throw new \RiminderApiArgumentException($eventName."is not a valid event.");
+        throw new \RiminderApiArgumentException($eventName." is not a valid event.");
       }
       return $this->handlers[$eventName] != null;
     }
 
     public function removeHandler($eventName) {
       if (!array_key_exists($eventName, $this->handlers)){
-        throw new \RiminderApiArgumentException($eventName."is not a valid event.");
+        throw new \RiminderApiArgumentException($eventName." is not a valid event.");
       }
       $this->handlers[$eventName] = null;
     }
@@ -59,6 +62,9 @@
 
     private function decode_request($encodedRequest) {
       list($encoded_sign, $payload) = explode('.', $encodedRequest, 2);
+      if (empty($encoded_sign) || empty($payload)) {
+        throw new \RiminderApiArgumentException("Error invalid request. Maybe it's not the 'HTTP_RIMINDER_SIGNATURE' field");
+      }
 
       $sign = self::base64UrlDecode($encoded_sign);
       $data = self::base64UrlDecode($payload);
@@ -71,7 +77,7 @@
 
     private function getHandlerForEvent($eventName) {
       if (!array_key_exists($eventName, $this->handlers)) {
-        throw new \RiminderApiWebhookException("Error: ".$eventName." is a invalid type.");
+        throw new \RiminderApiWebhookException("Error: ".$eventName." is a invalid event.");
       }
       $handler = $this->handlers[$eventName];
       return $handler;
@@ -82,10 +88,15 @@
         throw new \RiminderApiArgumentException("No webhook secret.");
       }
       $decoded_request = $this->decode_request($encodedRequest);
+
+      if (!array_key_exists('type', $decoded_request)) {
+        throw new \RiminderApiWebhookException("Error: Invalid request: no 'type' field found.");
+      }
       $handler = $this->getHandlerForEvent($decoded_request['type']);
       if (is_null($handler)){
         return;
       }
+
       $handler($decoded_request['type'], $decoded_request);
     }
   }

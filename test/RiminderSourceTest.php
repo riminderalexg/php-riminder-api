@@ -24,7 +24,7 @@ final class RiminderTestSource extends TestCase {
       TestHelper::assertDateObj($this, $resp[0]['date_creation']);
   }
 
-  public function testGet(): void {
+  public function testGetSource(): void {
       $api = new Riminder(TestHelper::getSecret());
       $refKeys = array('source_id',
         'name',
@@ -41,7 +41,7 @@ final class RiminderTestSource extends TestCase {
         return;
       }
       $source_id = $sources[0]['source_id'];
-      $getSource = function () use ($api, $source_id) {  return $api->source->get($source_id); };
+      $getSource = function () use ($api, $source_id) {  return $api->source->getSource($source_id); };
       $resp = TestHelper::useApiFuncWithReportedErr($this, $getSource);
       if (empty($resp)) {
         $this->fail('No datas retrieved!');
@@ -52,11 +52,11 @@ final class RiminderTestSource extends TestCase {
       TestHelper::assertDateObj($this, $resp['date_creation']);
   }
 
-  public function testGetWithInvalidSourceId(): void {
+  public function testGetSourceWithInvalidSourceId(): void {
       $api = new Riminder(TestHelper::getSecret());
 
       $source_id = 'zap';
-      $getSource = function () use ($api, $source_id) {  return $api->source->get($source_id); };
+      $getSource = function () use ($api, $source_id) {  return $api->source->getSource($source_id); };
       $resp = TestHelper::useApiFuncWithExpectedErr($this, $getSource, 'RiminderApiResponseException');
   }
 

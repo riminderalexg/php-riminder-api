@@ -23,7 +23,7 @@ final class RiminderTestFilter extends TestCase {
       TestHelper::assertDateObj($this, $resp[0]['date_creation']);
   }
 
-  public function testGet(): void {
+  public function testGetFilter(): void {
       $api = new Riminder(TestHelper::getSecret());
       $refKeys = array('filter_id',
         'filter_reference',
@@ -48,7 +48,7 @@ final class RiminderTestFilter extends TestCase {
       }
       $filter_id = $filters[0]['filter_id'];
       $filter_reference = $filters[0]['filter_reference'];
-      $getFilter = function () use ($api, $filter_id, $filter_reference) {  return $api->filter->get($filter_id); };
+      $getFilter = function () use ($api, $filter_id, $filter_reference) {  return $api->filter->getFilter($filter_id); };
       $resp = TestHelper::useApiFuncWithReportedErr($this, $getFilter, $filter_id);
       if (empty($resp)) {
         $this->fail('No datas retrieved!');
@@ -62,7 +62,7 @@ final class RiminderTestFilter extends TestCase {
       TestHelper::assertDateObj($this, $resp['date_creation']);
   }
 
-  public function testGet_reference(): void {
+  public function testGetFilter_reference(): void {
       $api = new Riminder(TestHelper::getSecret());
       $refKeys = array('filter_id',
         'filter_reference',
@@ -87,7 +87,7 @@ final class RiminderTestFilter extends TestCase {
       }
       $filter_id = $filters[0]['filter_id'];
       $filter_reference = $filters[0]['filter_reference'];
-      $getFilter = function () use ($api, $filter_id, $filter_reference) {  return $api->filter->get($filter_reference); };
+      $getFilter = function () use ($api, $filter_id, $filter_reference) {  return $api->filter->getFilter($filter_reference); };
       $resp = TestHelper::useApiFuncWithReportedErr($this, $getFilter, $filter_id);
       if (empty($resp)) {
         $this->fail('No datas retrieved!');
@@ -102,12 +102,12 @@ final class RiminderTestFilter extends TestCase {
   }
 
 
-  public function testGetWithInvalidFilterId(): void {
+  public function testGetFilterWithInvalidFilterId(): void {
       $api = new Riminder(TestHelper::getSecret());
 
       $filter_id = 'zap';
       $filter_reference = '$filters[0][]';
-      $getFilter = function () use ($api, $filter_id, $filter_reference) {  return $api->filter->get($filter_id, $filter_reference); };
+      $getFilter = function () use ($api, $filter_id, $filter_reference) {  return $api->filter->getFilter($filter_id, $filter_reference); };
       $resp = TestHelper::useApiFuncWithExpectedErr($this, $getFilter, 'RiminderApiResponseException');
   }
 

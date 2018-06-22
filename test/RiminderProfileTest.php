@@ -76,7 +76,7 @@ final class RiminderTestProfile extends TestCase {
       $profile_id = $profile_idPair['profile_id'];
       $source_id = $profile_idPair['source_id'];
       $profileGet = function () use ($api, $profile_id, $source_id)
-        { return $api->profile->get($profile_id, $source_id); };
+        { return $api->profile->getProfile($profile_id, $source_id); };
       $resp = TestHelper::useApiFuncWithIgnoredErr($this, $profileGet);
       if (!empty($resp)) {
         return $profile_idPair;
@@ -433,7 +433,7 @@ final class RiminderTestProfile extends TestCase {
 
 
 
-  public function testGet(): void {
+  public function testGetProfile(): void {
       $api = new Riminder(TestHelper::getSecret());
       $refKeys = array('profile_id',
         'profile_reference',
@@ -448,7 +448,7 @@ final class RiminderTestProfile extends TestCase {
       $profile_ids = $this->getSomeProfileIdsPair($api);
 
       $profileGet = function ($profile_id, $source_id) use ($api)
-        { return $api->profile->get($profile_id, $source_id); };
+        { return $api->profile->getProfile($profile_id, $source_id); };
       $resp = $this->useApiFuncWithValidProfile($profile_ids, $profileGet);
       if (empty($resp)) {
         $this->markTestSkipped('No valid profile retrieved!');
@@ -460,7 +460,7 @@ final class RiminderTestProfile extends TestCase {
       TestHelper::assertDateObj($this, $resp['date_reception']);
   }
 
-  public function testGet_reference(): void {
+  public function testGetProfile_reference(): void {
       $api = new Riminder(TestHelper::getSecret());
       $refKeys = array('profile_id',
         'profile_reference',
@@ -479,7 +479,7 @@ final class RiminderTestProfile extends TestCase {
       }
 
       $profileGet = function ($profile_ref, $source_id) use ($api)
-        { return $api->profile->get(null, $source_id, $profile_ref); };
+        { return $api->profile->getProfile(null, $source_id, $profile_ref); };
       $resp = $this->useApiFuncWithValidProfile_reference($profile_ids, $profileGet);
       if (empty($resp)) {
         $this->markTestSkipped('No valid profile retrieved!');
@@ -491,12 +491,12 @@ final class RiminderTestProfile extends TestCase {
       TestHelper::assertDateObj($this, $resp['date_reception']);
   }
 
-  public function testGetWithInvalidProfileSourceId(): void {
+  public function testGetProfileWithInvalidProfileSourceId(): void {
       $api = new Riminder(TestHelper::getSecret());
       $profile_id = 'zap';
       $source_id = 'red apple corp';
       $getProfile = function () use ($api, $profile_id, $source_id)
-        {  return $api->profile->get($profile_id, $source_id); };
+        {  return $api->profile->getProfile($profile_id, $source_id); };
       $resp = TestHelper::useApiFuncWithExpectedErr($this, $getProfile, 'RiminderApiResponseException');
   }
 
@@ -681,7 +681,7 @@ final class RiminderTestProfile extends TestCase {
       $resp = TestHelper::useApiFuncWithExpectedErr($this, $getScoring, 'RiminderApiResponseException');
   }
 
-  public function testadd():void {
+  public function testPostProfile():void {
       $api = new Riminder(TestHelper::getSecret());
       $refKeys = array('profile_reference', 'file_id', 'file_name', 'file_size', 'extension', 'date_reception');
       $now =  new DateTime();
@@ -697,7 +697,7 @@ final class RiminderTestProfile extends TestCase {
       $profile_ref = strval(rand(0, 99999));
 
       $addProfile = function () use ($api, $now, $source_id, $file, $profile_ref)
-      { return $api->profile->add($source_id, $file, $profile_ref, $now->getTimestamp()); };
+      { return $api->profile->postProfile($source_id, $file, $profile_ref, $now->getTimestamp()); };
       $resp = TestHelper::useApiFuncWithReportedErr($this, $addProfile);
       if (empty($resp)) {
         $this->fail('No datas retrieved!');
@@ -708,7 +708,7 @@ final class RiminderTestProfile extends TestCase {
       $this->assertEquals($resp['profile_reference'], $profile_ref);
   }
 
-  public function testAdd_dir():void {
+  public function testPostProfiles():void {
       $api = new Riminder(TestHelper::getSecret());
       $refKeys = array('profile_reference', 'file_id', 'file_name', 'file_size', 'extension', 'date_reception');
       $now =  new DateTime();
@@ -724,7 +724,7 @@ final class RiminderTestProfile extends TestCase {
       $profile_ref = strval(rand(0, 99999));
 
       $addProfile = function () use ($api, $now, $source_id, $file, $profile_ref)
-      { return $api->profile->add_dir($source_id, $file, true, $now->getTimestamp()); };
+      { return $api->profile->postProfiles($source_id, $file, true, $now->getTimestamp()); };
       $resp = TestHelper::useApiFuncWithReportedErr($this, $addProfile);
       if (empty($resp)) {
         $this->fail('No file sended!');

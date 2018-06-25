@@ -55,7 +55,7 @@ final class RiminderTestFilter extends TestCase {
         return;
       }
 
-      var_dump($resp);
+      // var_dump($resp);
       TestHelper::assertArrayHasKeys($this, $resp, $refKeys);
       TestHelper::assertArrayHasKeys($this, $resp['filter'], $refFilterKeys);
       TestHelper::assertArrayHasKeys($this, $resp['stages'], $refStagesKeys);
@@ -87,14 +87,14 @@ final class RiminderTestFilter extends TestCase {
       }
       $filter_id = $filters[0]['filter_id'];
       $filter_reference = $filters[0]['filter_reference'];
-      $getFilter = function () use ($api, $filter_id, $filter_reference) {  return $api->filter->getFilter($filter_reference); };
+      $getFilter = function () use ($api, $filter_id, $filter_reference) {  return $api->filter->getFilter(null, $filter_reference); };
       $resp = TestHelper::useApiFuncWithReportedErr($this, $getFilter, $filter_id);
       if (empty($resp)) {
         $this->fail('No datas retrieved!');
         return;
       }
 
-      var_dump($resp);
+      // var_dump($resp);
       TestHelper::assertArrayHasKeys($this, $resp, $refKeys);
       TestHelper::assertArrayHasKeys($this, $resp['filter'], $refFilterKeys);
       TestHelper::assertArrayHasKeys($this, $resp['stages'], $refStagesKeys);

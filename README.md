@@ -128,8 +128,8 @@ This package supplies webhook support as well.
 * # Constants
   * `RiminderFields` Contains to fill profile's `args` array for /profiles constants.
   * `RiminderStage`  Contains profile stage constants.
-  * `RiminderSort_by`  Contains sorting options constants.
-  * `RiminderOrder_by`  Contains order options constants.
+  * `RiminderSortBy`  Contains sorting options constants.
+  * `RiminderOrderBy`  Contains order options constants.
   * `RiminderSeniority`  Contains profile seniority constants.
   * `RiminderTraining_metadata`  Contain metadata fields for profile adding constants.
   * `RiminderEvents` Contains event names constans.

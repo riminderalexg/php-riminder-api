@@ -148,11 +148,11 @@ final class RiminderTestProfile extends TestCase {
     $end =  new DateTime();
 
     $args = array(
-      RiminderFields::SOURCE_IDS => $source_ids,
-      RiminderFields::DATE_START => $start->getTimestamp(),
+      RiminderField::SOURCE_IDS => $source_ids,
+      RiminderField::DATE_START => $start->getTimestamp(),
       'date_end' => $end,
       'limit'    => 100,
-      RiminderFields::SORT_BY => RiminderSortBy::RANKING
+      RiminderField::SORT_BY => RiminderSortBy::RANKING
      );
     $getProfiles = function () use ($api, $args)
      { return $api->profile->getProfiles($args); };
@@ -200,12 +200,12 @@ final class RiminderTestProfile extends TestCase {
       $order_by = 'asc';
 
       $args = array(
-        RiminderFields::SOURCE_IDS => $source_ids,
-        RiminderFields::DATE_START => $start->getTimestamp(),
+        RiminderField::SOURCE_IDS => $source_ids,
+        RiminderField::DATE_START => $start->getTimestamp(),
         'date_end' => $end,
-        RiminderFields::SENIORITY => $seniority,
-        RiminderFields::FILTER_ID => $filter_id,
-        RiminderFields::STAGE => $stage,
+        RiminderField::SENIORITY => $seniority,
+        RiminderField::FILTER_ID => $filter_id,
+        RiminderField::STAGE => $stage,
         'page' => $page,
         'limit' => $limit,
         'sort_by' => $sort_by,
@@ -253,12 +253,12 @@ final class RiminderTestProfile extends TestCase {
       $order_by = 'asc';
 
       $args = array(
-        RiminderFields::SOURCE_IDS => $source_ids,
-        RiminderFields::DATE_START => $start->getTimestamp(),
+        RiminderField::SOURCE_IDS => $source_ids,
+        RiminderField::DATE_START => $start->getTimestamp(),
         'date_end' => $end,
-        RiminderFields::SENIORITY => $seniority,
-        RiminderFields::FILTER_ID => $filter_id,
-        RiminderFields::STAGE => $stage,
+        RiminderField::SENIORITY => $seniority,
+        RiminderField::FILTER_ID => $filter_id,
+        RiminderField::STAGE => $stage,
         'page' => $page,
         'limit' => $limit,
         'sort_by' => $sort_by,
@@ -306,12 +306,12 @@ final class RiminderTestProfile extends TestCase {
       $order_by = 'asc';
 
       $args = array(
-        RiminderFields::SOURCE_IDS => $source_ids,
-        RiminderFields::DATE_START => $start->getTimestamp(),
+        RiminderField::SOURCE_IDS => $source_ids,
+        RiminderField::DATE_START => $start->getTimestamp(),
         'date_end' => $end,
-        RiminderFields::SENIORITY => $seniority,
-        $api->Fields->FILTER_REFERENCE => $filter_reference,
-        RiminderFields::STAGE => $stage,
+        RiminderField::SENIORITY => $seniority,
+        RiminderField::FILTER_REFERENCE => $filter_reference,
+        RiminderField::STAGE => $stage,
         'page' => $page,
         'limit' => $limit,
         'sort_by' => $sort_by,
@@ -352,10 +352,10 @@ final class RiminderTestProfile extends TestCase {
       $source_ids = $this->getSomeNotSharedSourceIds($api);
 
       $args = array(
-        RiminderFields::SOURCE_IDS => $source_ids,
-        RiminderFields::DATE_START => $start->getTimestamp(),
+        RiminderField::SOURCE_IDS => $source_ids,
+        RiminderField::DATE_START => $start->getTimestamp(),
         'date_end' => $end->getTimestamp(),
-        RiminderFields::SORT_BY => RiminderSortBy::RANKING
+        RiminderField::SORT_BY => RiminderSortBy::RANKING
        );
       $getProfiles = function () use ($api, $args)
        { return $api->profile->getProfiles($args); };
@@ -386,10 +386,10 @@ final class RiminderTestProfile extends TestCase {
       $source_ids = $this->getSomeNotSharedSourceIds($api);
 
       $args = array(
-        RiminderFields::SOURCE_IDS => $source_ids,
-        RiminderFields::DATE_START => $start->getTimestamp(),
+        RiminderField::SOURCE_IDS => $source_ids,
+        RiminderField::DATE_START => $start->getTimestamp(),
         'date_end' => $end,
-       RiminderFields::SORT_BY => RiminderSortBy::RANKING
+       RiminderField::SORT_BY => RiminderSortBy::RANKING
        );
       $getProfiles = function () use ($api, $args)
        { return $api->profile->getProfiles($args); };
@@ -411,10 +411,10 @@ final class RiminderTestProfile extends TestCase {
       $source_ids = $this->getSomeNotSharedSourceIds($api);
 
       $args = array(
-        RiminderFields::SOURCE_IDS => $source_ids,
-        RiminderFields::DATE_START => $start,
+        RiminderField::SOURCE_IDS => $source_ids,
+        RiminderField::DATE_START => $start,
         'date_end' => $end,
-        RiminderFields::SORT_BY => RiminderSortBy::RANKING
+        RiminderField::SORT_BY => RiminderSortBy::RANKING
        );
       $getProfiles = function () use ($api, $args)
        { return $api->profile->getProfiles($args); };
@@ -693,7 +693,7 @@ final class RiminderTestProfile extends TestCase {
         $this->markTestSkipped('no api sources with this key');
       }
       $source_id = $source_ids[0];
-      $file = "./test/assets/test_cv.pdf";
+      $file = "./assets/test_cv.pdf";
       $profile_ref = strval(rand(0, 99999));
 
       $addProfile = function () use ($api, $now, $source_id, $file, $profile_ref)
@@ -720,7 +720,7 @@ final class RiminderTestProfile extends TestCase {
         $this->markTestSkipped('no api sources with this key');
       }
       $source_id = $source_ids[0];
-      $file = "./test/assets";
+      $file = "./assets";
       $profile_ref = strval(rand(0, 99999));
 
       $addProfile = function () use ($api, $now, $source_id, $file, $profile_ref)

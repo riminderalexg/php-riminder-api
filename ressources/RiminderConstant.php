@@ -16,13 +16,13 @@
       const NO    = 'no';
     }
 
-    class RiminderSort_by
+    class RiminderSortBy
     {
       const RECEPTION = 'reception';
       const RANKING   = 'ranking';
     }
 
-    class RiminderOrder_by
+    class RiminderOrderBy
     {
       const DESC = 'desc';
       const ASC  = 'asc';

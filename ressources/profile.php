@@ -90,7 +90,7 @@
       return json_decode($resp->getBody(), true)['data'];
     }
 
-    public function post_profile($source_id, $file_path, $profile_reference=null, $reception_date=null, $training_metadata=null) {
+    public function postProfile($source_id, $file_path, $profile_reference=null, $reception_date=null, $training_metadata=null) {
       $bodyParams = array (
         'source_id'           => $source_id
       );
@@ -106,7 +106,7 @@
       return json_decode($resp->getBody(), true)['data'];
     }
 
-    public function post_profiles($source_id, $dir_path, $recurs=false, $reception_date=null, $training_metadata=null) {
+    public function postProfiles($source_id, $dir_path, $recurs=false, $reception_date=null, $training_metadata=null) {
       if (!is_dir($dir_path)) {
         throw new \RiminderApiArgumentException("'".$dir_path."' is not a directory.", 1);
       }
@@ -116,7 +116,7 @@
 
       foreach ($files_path as $file_path) {
         try {
-          $resp = self::add($source_id, $file_path, null, $reception_date, $training_metadata);
+          $resp = self::postProfile($source_id, $file_path, null, $reception_date, $training_metadata);
           $succeed_files[$file_path] = $resp;
         } catch (\Exception $e) {
           $failed_files[$file_path] = $e;

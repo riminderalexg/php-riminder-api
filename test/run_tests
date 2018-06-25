@@ -1,0 +1,57 @@
+#!/bin/sh
+
+SOURCE_TEST="RiminderSourceTest.php"
+FILTER_TEST="./RiminderFilterTest.php"
+PROFILE_TEST="./RiminderProfileTest.php"
+WEBHOOK_TEST="./RiminderWebhookTest.php"
+
+IS_FULL=1
+IS_SOURCE=0
+IS_PROFILE=0
+IS_FILTER=0
+IS_WEBHOOK=0
+
+for var in "$@"
+do
+    if [ $var = "source" ]; then
+      IS_SOURCE=1
+      IS_FULL=0
+    elif [ $var = "profile" ]; then
+      IS_PROFILE=1
+      IS_FULL=0
+    elif [ $var = "filter" ]; then
+      IS_FILTER=1
+      IS_FULL=0
+    elif [ $var = "webhook" ]; then
+      IS_WEBHOOK=1
+      IS_FULL=0
+    fi
+done
+
+if [ $IS_FULL -eq 1 -o $IS_SOURCE -eq 1 ]; then
+  echo "Source Test..."
+  ../vendor/bin/phpunit --verbose --bootstrap ../vendor/autoload.php $SOURCE_TEST
+  echo "Done!"
+  echo "---------------------------------------------"
+fi
+
+if [ $IS_FULL -eq 1 -o $IS_FILTER -eq 1 ]; then
+  echo "Filter Test..."
+  ../vendor/bin/phpunit --verbose --bootstrap ../vendor/autoload.php $FILTER_TEST
+  echo "Done!"
+  echo "---------------------------------------------"
+fi
+
+if [ $IS_FULL -eq 1 -o $IS_PROFILE -eq 1 ]; then
+  echo "Profile Test..."
+  ../vendor/bin/phpunit --verbose --bootstrap ../vendor/autoload.php $PROFILE_TEST
+  echo "Done!"
+  echo "---------------------------------------------"
+fi
+
+if [ $IS_FULL -eq 1 -o $IS_WEBHOOK -eq 1 ]; then
+  echo "Webhook Test..."
+  ../vendor/bin/phpunit --verbose --bootstrap ../vendor/autoload.php $WEBHOOK_TEST
+  echo "Done!"
+  echo "---------------------------------------------"
+fi

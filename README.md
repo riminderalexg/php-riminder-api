@@ -19,7 +19,7 @@ Then create a new `Riminder` object with this key:
 require __DIR__ . '/vendor/autoload.php';
 
 // Authentication to api
-$riminderClient = new Riminder('yourShinnyKey');
+$client = new Riminder('yourShinnyKey');
 
 // Now, you can use the api, Congrats !
 
@@ -31,99 +31,122 @@ $riminderClient = new Riminder('yourShinnyKey');
 require __DIR__ . '/vendor/autoload.php';
 
 // Authentication to api
-$riminderClient = new Riminder('yourShinnyKey');
+$client = new Riminder('yourShinnyKey');
 
-$profile = $riminderClient->profile->getProfile('102b6aa635fnf8ar70e7888ee63c0jde0c753dtg')
-$name = $profile['name']
-$profile_id = $profile['profile_id']
+$profile = $client->profile->get(new ProfileID('102b6aa635fnf8ar70e7888ee63c0jde0c753dtg'));
+$name = $profile['name'];
+$profile_id = $profile['profile_id'];
 
-echo "Profile '$profile_id' is named '$name', a beautiful name actually"
+echo "Profile '$profile_id' is named '$name', a beautiful name actually";
 ```
 # Errors
 If an error occurs while an operation an exception of type `RiminderApiException` is raised.
 
+# Profile the ID or the reference
+Methods that needs an profile id or reference takes a `ProfileID` or a `ProfileReference`, they are interchangeable.
+```php
+$profile_id = new ProfileID('102b6aa635fnf8ar70e7888ee63c0jde0c753dtg');
+$profile_reference = new ProfileReference('reference01');
+$source_id = '34566aa635fnrtar70e7568ee6345jde0c75ert4';
+// This:
+$client->profile->get($profile_id, $source_id);
+// Works as much as:
+$client->profile->get($profile_reference, $source_id);
+```
+
+# Filter the ID or the reference
+It's works the same way as profile.
+
 ## Methods & Resources
-  For any methods that needs `*_id` and `*_reference`
-  you need to provide at least one of them but not necessarily both.
+  `*_id` and `*_reference` are marked as `*_ident` for simplicity.
+
 * # filters
   * Get all filters for given team account :
   ```php
-  RiminderClient->filter->getfilters()
+  $client->filter->list()
   ```
   * Get the filter information associated with filter id :
   ```php
-  RiminderClient->filter->getFilter($filter_id, $filter_reference)
+  $client->filter->get($filter_ident)
   ```
 * # Profiles
   * Retrieve the profiles information associated with some source ids :
   ```php
-  RiminderClient->profile->getProfiles(array $args)
+  $start = new DateTime('2017-01-02');
+  $end = new DateTime();
+  $args = [
+      RiminderField::SOURCE_IDS => ['34566aa635fnrtar70e7568ee6345jde0c75ert4'],
+      RiminderField::DATE_START => $start->getTimestamp(),
+      RiminderField::DATE_END => $end->getTimestamp(),
+      RiminderField::SORT_BY => RiminderSortBy::RANKING,
+      RiminderField::FILTER_REFERENCE => 'reference01'
+  ];
+  $client->profile->list($args);
   ```
-  `$args` is a array that contains all query parameters you need.
   * Add a resume to a sourced id :
   ```php
-  RiminderClient->profile->postProfile($source_id, $file_path, $profile_reference, $timestamp_reception, $training_metadata)
+  $client->profile->add($source_id, $file_path, $profile_reference, $timestamp_reception, $training_metadata)
   ```
   * Add all resume from a directory to a sourced id, use `$recurs` to enable recursive mode :
   ```php
-  RiminderClient->profile->postProfiles($source_id, $file_path, $recurs, $timestamp_reception, $training_metadata)
+  $client->profile->addList($source_id, $file_path, $is_recurs, $timestamp_reception, $training_metadata)
   ```
   It returns an array like: `result[filename] = server_reponse`.
   Can throw `RiminderApiProfileUploadException`
   * Get the profile information associated with both profile id and source id :
   ```php
-  RiminderClient->profile->getProfile($profile_id, $source_id, $profile_reference)
+  $client->profile->get($profile_ident, $source_id)
   ```
   * Retrieve the profile documents associated with both profile id and source id :
   ```php
-  RiminderClient->profile->getDocuments($profile_id, $source_id, $profile_reference)
+  $client->profile->document->list($profile_ident, $source_id)
   ```
   * Retrieve the profile parsing data associated with both profile id and source id :
    ```php
-   RiminderClient->profile->getParsing($profile_id, $source_id, $profile_reference)
+   $client->profile->parsing->get($profile_ident, $source_ident)
    ```
   * Retrieve the profile scoring data associated with both profile id and source id :
    ```php
-   RiminderClient->profile->getScoring($profile_id, $source_id, $profile_reference)
+   $client->profile->scoring->list($profile_ident, $source_id)
    ```
   * Edit the profile stage given a filter :
   ```php
-  RiminderClient->profile->updateStage($profile_id, $source_id, $filter_id, $rating, $filter_reference, $profile_reference)
+  $client->profile->stage->set($profile_ident, $source_id, $filter_ident, $rating)
   ```
   * Edit the profile rating given a filter :
   ```php
-  RiminderClient->profile->updateRating($profile_id, $source_id, $filter_id, $rating, $filter_reference, $profile_reference)
+  $client->profile->rating->set($profile_ident, $source_id, $filter_ident, $rating)
   ```
 * # Sources
   * Get all sources for given team account:
   ```php
-  RiminderClient->source->getSources()
+  $client->source->list()
   ```
   * Get the source information associated with source id:
    ```php
-   RiminderClient->source->getSource($source_id)
+   $client->source->get($source_id)
    ```
 * # webhook
 This package supplies webhook support as well.
   * Check for webhook integration:
   ```php
-  RiminderClient->webhook->check();
+  $client->webhook->check();
   ```
   * Set an handler for an event (listed with RiminderEvents constants)
   ```php
-  RiminderClient->webhook->setHandler($eventName, $callback);
+  $client->webhook->setHandler($eventName, $callback);
   ```
   * Check if the event has an handler
   ```php
-  RiminderClient->webhook->isHandlerPresent($eventName);
+  $client->webhook->isHandlerPresent($eventName);
   ```
   * Remove handler for an event
   ```php
-  RiminderClient->webhook->removeHandler($eventName);
+  $client->webhook->removeHandler($eventName);
   ```
   * Handle the incoming webhook request, you need to put as argument HTTP_RIMINDER_SIGNATURE as an argument.
   ```php
-  RiminderClient->webhook->handleRequest($encoded_datas);
+  $client->webhook->handleRequest($encoded_datas);
   ```
 * # Constants
   * `RiminderFields` Contains to fill profile's `args` array for /profiles constants.
@@ -132,6 +155,7 @@ This package supplies webhook support as well.
   * `RiminderOrderBy`  Contains order options constants.
   * `RiminderSeniority`  Contains profile seniority constants.
   * `RiminderTraining_metadata`  Contain metadata fields for profile adding constants.
+  * `RiminderEvents` Constains event name for webhooks
   * `RiminderEvents` Contains event names constans.
 * # Exception
   * `RiminderApiException` parent of all thrown exception. Thrown when an error occurs.

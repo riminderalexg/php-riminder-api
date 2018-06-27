@@ -48,7 +48,7 @@ final class RiminderTestFilter extends TestCase {
       }
       $filter_id = $filters[0]['filter_id'];
       $filter_reference = $filters[0]['filter_reference'];
-      $getFilter = function () use ($api, $filter_id, $filter_reference) {  return $api->filter->get($filter_id); };
+      $getFilter = function () use ($api, $filter_id, $filter_reference) {  return $api->filter->get(new FilterID($filter_id)); };
       $resp = TestHelper::useApiFuncWithReportedErr($this, $getFilter, $filter_id);
       if (empty($resp)) {
         $this->fail('No datas retrieved!');
@@ -87,7 +87,7 @@ final class RiminderTestFilter extends TestCase {
       }
       $filter_id = $filters[0]['filter_id'];
       $filter_reference = $filters[0]['filter_reference'];
-      $getFilter = function () use ($api, $filter_id, $filter_reference) {  return $api->filter->get(null, $filter_reference); };
+      $getFilter = function () use ($api, $filter_id, $filter_reference) {  return $api->filter->get(new FilterReference($filter_reference)); };
       $resp = TestHelper::useApiFuncWithReportedErr($this, $getFilter, $filter_id);
       if (empty($resp)) {
         $this->fail('No datas retrieved!');
@@ -107,7 +107,7 @@ final class RiminderTestFilter extends TestCase {
 
       $filter_id = 'zap';
       $filter_reference = '$filters[0][]';
-      $getFilter = function () use ($api, $filter_id, $filter_reference) {  return $api->filter->get($filter_id, $filter_reference); };
+      $getFilter = function () use ($api, $filter_id, $filter_reference) {  return $api->filter->get(new FilterID($filter_id)); };
       $resp = TestHelper::useApiFuncWithExpectedErr($this, $getFilter, 'RiminderApiResponseException');
   }
 

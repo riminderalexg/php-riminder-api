@@ -13,7 +13,7 @@
       return json_decode($resp->getBody(), true)['data'];
     }
 
-    public function get($source_id) {
+    public function get(string $source_id) {
       $query = array('source_id' => $source_id);
       $resp = $this->riminder->_rest->get("source", $query);
 

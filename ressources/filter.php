@@ -14,8 +14,9 @@
       return json_decode($resp->getBody(), true)['data'];
     }
 
-    public function get($filter_id, $filter_reference=null) {
-      $query = RequestBodyUtils::selectIdRef('filter', $filter_id, $filter_reference);
+    public function get(RiminderFilterIdent $filter_ident) {
+      $query = [];
+      $filter_ident->addToArray($query);
       $resp = $this->riminder->_rest->get("filter", $query);
 
       return json_decode($resp->getBody(), true)['data'];

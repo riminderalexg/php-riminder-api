@@ -89,17 +89,16 @@
       $query['date_start'] = RiminderProfile::argDateToTimestamp($query['date_start']);
       $query['date_end'] = RiminderProfile::argDateToTimestamp($query['date_end']);
       $resp = $this->riminder->_rest->get("profiles", $query);
-      file_put_contents("zap", $resp->getBody());
-      // var_dump($resp);
-
       return json_decode($resp->getBody(), true)['data'];
     }
 
-    public function add($source_id, $file_path, $profile_reference=null, $reception_date=null, $training_metadata=null) {
+    public function add(string $source_id, string $file_path, $profile_reference=null, $reception_date=null, $training_metadata=null) {
       $bodyParams = array (
         'source_id'           => $source_id
       );
-
+      if (!empty($profile_reference) && $profile_reference instanceof ProfileReference) {
+        $profile_reference = $profile_reference->getValue();
+      }
       RequestBodyUtils::add_if_not_null($bodyParams, 'training_metadata', $training_metadata);
       RequestBodyUtils::add_if_not_null($bodyParams, 'profile_reference', $profile_reference);
       RequestBodyUtils::add_if_not_null($bodyParams, 'timestamp_reception', $reception_date);
@@ -111,7 +110,7 @@
       return json_decode($resp->getBody(), true)['data'];
     }
 
-    public function addlist($source_id, $dir_path, $recurs=false, $reception_date=null, $training_metadata=null) {
+    public function addlist(string $source_id, string $dir_path, bool $recurs=false, $reception_date=null, $training_metadata=null) {
       if (!is_dir($dir_path)) {
         throw new \RiminderApiArgumentException("'".$dir_path."' is not a directory.", 1);
       }
@@ -133,11 +132,11 @@
       return $succeed_files;
     }
 
-    public function get($profile_id, $source_id, $profile_reference=null) {
+    public function get(RiminderProfileIdent $profile_ident, string $source_id) {
       $query = array(
         'source_id'  => $source_id
       );
-      $query = array_merge($query, RequestBodyUtils::selectIdRef('profile', $profile_id, $profile_reference));
+      $profile_ident->addToArray($query);
       $resp = $this->riminder->_rest->get("profile", $query);
 
       return json_decode($resp->getBody(), true)['data'];
@@ -154,11 +153,11 @@
       $this->riminder = $parent;
     }
 
-    public function list($profile_id, $source_id, $profile_reference=null) {
+    public function list(RiminderProfileIdent $profile_ident, string $source_id) {
       $query = array(
         'source_id'  => $source_id
       );
-      $query = array_merge($query, RequestBodyUtils::selectIdRef('profile', $profile_id, $profile_reference));
+      $profile_ident->addToArray($query);
       $resp = $this->riminder->_rest->get("profile/documents", $query);
 
       return json_decode($resp->getBody(), true)['data'];
@@ -175,11 +174,11 @@
       $this->riminder = $parent;
     }
 
-    public function get($profile_id, $source_id, $profile_reference=null) {
+    public function get(RiminderProfileIdent $profile_ident, string $source_id) {
       $query = array(
         'source_id'  => $source_id
       );
-      $query = array_merge($query, RequestBodyUtils::selectIdRef('profile', $profile_id, $profile_reference));
+      $profile_ident->addToArray($query);
       $resp = $this->riminder->_rest->get("profile/parsing", $query);
 
       return json_decode($resp->getBody(), true)['data'];
@@ -197,11 +196,11 @@
     }
 
 
-    public function list($profile_id, $source_id, $profile_reference=null) {
+    public function list(RiminderProfileIdent $profile_ident, string $source_id) {
       $query = array(
         'source_id'  => $source_id
       );
-      $query = array_merge($query, RequestBodyUtils::selectIdRef('profile', $profile_id, $profile_reference));
+      $profile_ident->addToArray($query);
       $resp = $this->riminder->_rest->get("profile/scoring", $query);
 
       return json_decode($resp->getBody(), true)['data'];
@@ -218,14 +217,13 @@
       $this->riminder = $parent;
     }
 
-    public function set($profile_id, $source_id, $filter_id, $stage,
-                              $profile_reference=null, $filter_reference=null) {
+    public function set(RiminderProfileIdent $profile_ident, string $source_id, RiminderFilterIdent $filter_ident, string $stage) {
       $bodyParams = array(
         'stage'       => $stage,
         'source_id'   => $source_id,
       );
-      $bodyParams = array_merge($bodyParams, RequestBodyUtils::selectIdRef('profile', $profile_id, $profile_reference));
-      $bodyParams = array_merge($bodyParams, RequestBodyUtils::selectIdRef('filter', $filter_id, $filter_reference));
+      $profile_ident->addToArray($bodyParams);
+      $filter_ident->addToArray($bodyParams);
       $resp = $this->riminder->_rest->patch("profile/stage", $bodyParams);
 
       return json_decode($resp->getBody(), true)['data'];
@@ -241,14 +239,13 @@
       $this->riminder = $parent;
     }
 
-    public function set($profile_id, $source_id, $filter_id, $rating,
-                                $profile_reference=null, $filter_reference=null) {
+    public function set(RiminderProfileIdent $profile_ident, string $source_id, RiminderFilterIdent $filter_ident, int $rating) {
       $bodyParams = array(
         'rating'       => $rating,
         'source_id'   => $source_id,
       );
-      $bodyParams = array_merge($bodyParams, RequestBodyUtils::selectIdRef('profile', $profile_id, $profile_reference));
-      $bodyParams = array_merge($bodyParams, RequestBodyUtils::selectIdRef('filter', $filter_id, $filter_reference));
+      $profile_ident->addToArray($bodyParams);
+      $filter_ident->addToArray($bodyParams);
       $resp = $this->riminder->_rest->patch("profile/rating", $bodyParams);
 
       return json_decode($resp->getBody(), true)['data'];

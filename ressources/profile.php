@@ -9,6 +9,11 @@
 
     public function __construct($parent) {
       $this->riminder = $parent;
+      $this->rating = new RiminderProfileRating($parent);
+      $this->stage = new RiminderProfileStage($parent);
+      $this->scoring = new RiminderProfileScoring($parent);
+      $this->parsing = new RiminderProfileParsing($parent);
+      $this->document = new RiminderProfileDocument($parent);
     }
 
     private static function is_extensionValid(string $file) {
@@ -75,7 +80,7 @@
       }
     }
 
-    public function getProfiles(array $query) {
+    public function list(array $query) {
       self::assert_querykey_exist($query, 'source_ids');
       self::assert_querykey_exist($query, 'date_start');
       self::assert_querykey_exist($query, 'date_end');
@@ -90,7 +95,7 @@
       return json_decode($resp->getBody(), true)['data'];
     }
 
-    public function postProfile($source_id, $file_path, $profile_reference=null, $reception_date=null, $training_metadata=null) {
+    public function add($source_id, $file_path, $profile_reference=null, $reception_date=null, $training_metadata=null) {
       $bodyParams = array (
         'source_id'           => $source_id
       );
@@ -106,7 +111,7 @@
       return json_decode($resp->getBody(), true)['data'];
     }
 
-    public function postProfiles($source_id, $dir_path, $recurs=false, $reception_date=null, $training_metadata=null) {
+    public function addlist($source_id, $dir_path, $recurs=false, $reception_date=null, $training_metadata=null) {
       if (!is_dir($dir_path)) {
         throw new \RiminderApiArgumentException("'".$dir_path."' is not a directory.", 1);
       }
@@ -116,7 +121,7 @@
 
       foreach ($files_path as $file_path) {
         try {
-          $resp = self::postProfile($source_id, $file_path, null, $reception_date, $training_metadata);
+          $resp = self::add($source_id, $file_path, null, $reception_date, $training_metadata);
           $succeed_files[$file_path] = $resp;
         } catch (\Exception $e) {
           $failed_files[$file_path] = $e;
@@ -128,7 +133,7 @@
       return $succeed_files;
     }
 
-    public function getProfile($profile_id, $source_id, $profile_reference=null) {
+    public function get($profile_id, $source_id, $profile_reference=null) {
       $query = array(
         'source_id'  => $source_id
       );
@@ -137,8 +142,19 @@
 
       return json_decode($resp->getBody(), true)['data'];
     }
+  }
 
-    public function getDocuments($profile_id, $source_id, $profile_reference=null) {
+  /**
+   *
+   */
+  class RiminderProfileDocument
+  {
+
+    public function __construct($parent) {
+      $this->riminder = $parent;
+    }
+
+    public function list($profile_id, $source_id, $profile_reference=null) {
       $query = array(
         'source_id'  => $source_id
       );
@@ -147,8 +163,19 @@
 
       return json_decode($resp->getBody(), true)['data'];
     }
+  }
 
-    public function getParsing($profile_id, $source_id, $profile_reference=null) {
+  /**
+   *
+   */
+  class RiminderProfileParsing
+  {
+
+    public function __construct($parent) {
+      $this->riminder = $parent;
+    }
+
+    public function get($profile_id, $source_id, $profile_reference=null) {
       $query = array(
         'source_id'  => $source_id
       );
@@ -157,8 +184,20 @@
 
       return json_decode($resp->getBody(), true)['data'];
     }
+  }
 
-    public function getScoring($profile_id, $source_id, $profile_reference=null) {
+/**
+ *
+ */
+  class RiminderProfileScoring
+  {
+
+    public function __construct($parent) {
+      $this->riminder = $parent;
+    }
+
+
+    public function list($profile_id, $source_id, $profile_reference=null) {
       $query = array(
         'source_id'  => $source_id
       );
@@ -167,8 +206,19 @@
 
       return json_decode($resp->getBody(), true)['data'];
     }
+  }
 
-    public function updateStage($profile_id, $source_id, $filter_id, $stage,
+  /**
+   *
+   */
+  class RiminderProfileStage
+  {
+
+    public function __construct($parent) {
+      $this->riminder = $parent;
+    }
+
+    public function set($profile_id, $source_id, $filter_id, $stage,
                               $profile_reference=null, $filter_reference=null) {
       $bodyParams = array(
         'stage'       => $stage,
@@ -180,8 +230,18 @@
 
       return json_decode($resp->getBody(), true)['data'];
     }
+  }
 
-    public function updateRating($profile_id, $source_id, $filter_id, $rating,
+  /**
+   *
+   */
+  class RiminderProfileRating
+  {
+    public function __construct($parent) {
+      $this->riminder = $parent;
+    }
+
+    public function set($profile_id, $source_id, $filter_id, $rating,
                                 $profile_reference=null, $filter_reference=null) {
       $bodyParams = array(
         'rating'       => $rating,
@@ -195,4 +255,5 @@
     }
 
   }
+
  ?>

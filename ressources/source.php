@@ -7,13 +7,13 @@
       $this->riminder = $parent;
     }
 
-    public function getSources() {
+    public function list() {
       $resp = $this->riminder->_rest->get("sources");
 
       return json_decode($resp->getBody(), true)['data'];
     }
 
-    public function getSource($source_id) {
+    public function get($source_id) {
       $query = array('source_id' => $source_id);
       $resp = $this->riminder->_rest->get("source", $query);
 

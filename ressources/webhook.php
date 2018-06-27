@@ -19,7 +19,7 @@
       ];
     }
 
-    public function postCheck() {
+    public function check() {
       $resp = $this->riminder->_rest->post("webhook/check");
 
       return json_decode($resp->getBody(), true);

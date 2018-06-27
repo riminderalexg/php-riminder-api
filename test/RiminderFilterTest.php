@@ -12,7 +12,7 @@ final class RiminderTestFilter extends TestCase {
       $api = new Riminder(TestHelper::getSecret());
       $refKeys = array('filter_id', 'filter_reference', 'name', 'archive', 'date_creation');
 
-      $getFilters = function () use ($api) { return $api->filter->getFilters(); };
+      $getFilters = function () use ($api) { return $api->filter->list(); };
 
       $resp = TestHelper::useApiFuncWithReportedErr($this, $getFilters);
       if (empty($resp)) {
@@ -40,7 +40,7 @@ final class RiminderTestFilter extends TestCase {
       $refFilterKeys = array('name');
       $refStagesKeys = array('count_yes', 'count_later', 'count_no');
 
-      $getFilters = function () use ($api) {  return $api->filter->getFilters(); };
+      $getFilters = function () use ($api) {  return $api->filter->list(); };
       $filters = TestHelper::useApiFuncWithReportedErrAsSkip($this, $getFilters);
       if (empty($filters)) {
         $this->markTestSkipped('No filters retrieved!');
@@ -48,7 +48,7 @@ final class RiminderTestFilter extends TestCase {
       }
       $filter_id = $filters[0]['filter_id'];
       $filter_reference = $filters[0]['filter_reference'];
-      $getFilter = function () use ($api, $filter_id, $filter_reference) {  return $api->filter->getFilter($filter_id); };
+      $getFilter = function () use ($api, $filter_id, $filter_reference) {  return $api->filter->get($filter_id); };
       $resp = TestHelper::useApiFuncWithReportedErr($this, $getFilter, $filter_id);
       if (empty($resp)) {
         $this->fail('No datas retrieved!');
@@ -79,7 +79,7 @@ final class RiminderTestFilter extends TestCase {
       $refFilterKeys = array('name');
       $refStagesKeys = array('count_yes', 'count_later', 'count_no');
 
-      $getFilters = function () use ($api) {  return $api->filter->getFilters(); };
+      $getFilters = function () use ($api) {  return $api->filter->list(); };
       $filters = TestHelper::useApiFuncWithReportedErrAsSkip($this, $getFilters);
       if (empty($filters)) {
         $this->markTestSkipped('No filters retrieved!');
@@ -87,7 +87,7 @@ final class RiminderTestFilter extends TestCase {
       }
       $filter_id = $filters[0]['filter_id'];
       $filter_reference = $filters[0]['filter_reference'];
-      $getFilter = function () use ($api, $filter_id, $filter_reference) {  return $api->filter->getFilter(null, $filter_reference); };
+      $getFilter = function () use ($api, $filter_id, $filter_reference) {  return $api->filter->get(null, $filter_reference); };
       $resp = TestHelper::useApiFuncWithReportedErr($this, $getFilter, $filter_id);
       if (empty($resp)) {
         $this->fail('No datas retrieved!');
@@ -107,7 +107,7 @@ final class RiminderTestFilter extends TestCase {
 
       $filter_id = 'zap';
       $filter_reference = '$filters[0][]';
-      $getFilter = function () use ($api, $filter_id, $filter_reference) {  return $api->filter->getFilter($filter_id, $filter_reference); };
+      $getFilter = function () use ($api, $filter_id, $filter_reference) {  return $api->filter->get($filter_id, $filter_reference); };
       $resp = TestHelper::useApiFuncWithExpectedErr($this, $getFilter, 'RiminderApiResponseException');
   }
 

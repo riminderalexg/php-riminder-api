@@ -8,13 +8,13 @@
       $this->riminder = $parent;
     }
 
-    public function getFilters() {
+    public function list() {
       $resp = $this->riminder->_rest->get("filters");
 
       return json_decode($resp->getBody(), true)['data'];
     }
 
-    public function getFilter($filter_id, $filter_reference=null) {
+    public function get($filter_id, $filter_reference=null) {
       $query = RequestBodyUtils::selectIdRef('filter', $filter_id, $filter_reference);
       $resp = $this->riminder->_rest->get("filter", $query);
 

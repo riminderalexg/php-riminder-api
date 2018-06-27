@@ -13,7 +13,7 @@ final class RiminderTestSource extends TestCase {
       $api = new Riminder(TestHelper::getSecret());
       $refKeys = array('source_id', 'name', 'type', 'archive', 'date_creation');
 
-      $getSources = function () use ($api) { return $api->source->getSources(); };
+      $getSources = function () use ($api) { return $api->source->list(); };
 
       $resp = TestHelper::useApiFuncWithReportedErr($this, $getSources);
       if (empty($resp)) {
@@ -34,14 +34,14 @@ final class RiminderTestSource extends TestCase {
         'date_creation',
         );
 
-      $getSources = function () use ($api) {  return $api->source->getSources(); };
+      $getSources = function () use ($api) {  return $api->source->list(); };
       $sources = TestHelper::useApiFuncWithReportedErrAsSkip($this, $getSources);
       if (empty($sources)) {
         $this->markTestSkipped('No jobs retrieved!');
         return;
       }
       $source_id = $sources[0]['source_id'];
-      $getSource = function () use ($api, $source_id) {  return $api->source->getSource($source_id); };
+      $getSource = function () use ($api, $source_id) {  return $api->source->get($source_id); };
       $resp = TestHelper::useApiFuncWithReportedErr($this, $getSource);
       if (empty($resp)) {
         $this->fail('No datas retrieved!');
@@ -56,7 +56,7 @@ final class RiminderTestSource extends TestCase {
       $api = new Riminder(TestHelper::getSecret());
 
       $source_id = 'zap';
-      $getSource = function () use ($api, $source_id) {  return $api->source->getSource($source_id); };
+      $getSource = function () use ($api, $source_id) {  return $api->source->get($source_id); };
       $resp = TestHelper::useApiFuncWithExpectedErr($this, $getSource, 'RiminderApiResponseException');
   }
 

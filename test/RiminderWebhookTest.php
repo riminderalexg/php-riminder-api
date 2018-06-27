@@ -37,7 +37,7 @@ final class RiminderTestWebhook extends TestCase {
       $api = new Riminder(TestHelper::getSecret());
       $refKeys = array('team_name', 'webhook_url', 'webhook_id');
 
-      $checkWebhook = function () use ($api) { return $api->webhook->postCheck(); };
+      $checkWebhook = function () use ($api) { return $api->webhook->check(); };
 
       $resp = TestHelper::useApiFuncWithReportedErr($this, $checkWebhook);
       if (empty($resp)) {

@@ -63,11 +63,11 @@ It's works the same way as profile.
 * # filters
   * Get all filters for given team account :
   ```php
-  $client->filter->list()
+  $client->filter->list();
   ```
   * Get the filter information associated with filter id :
   ```php
-  $client->filter->get($filter_ident)
+  $client->filter->get($filter_ident);
   ```
 * # Profiles
   * Retrieve the profiles information associated with some source ids :
@@ -85,33 +85,33 @@ It's works the same way as profile.
   ```
   * Add a resume to a sourced id :
   ```php
-  $client->profile->add($source_id, $file_path, $profile_reference, $timestamp_reception, $training_metadata)
+  $client->profile->add($source_id, $file_path, $profile_reference, $timestamp_reception, $training_metadata);
   ```
   * Add all resume from a directory to a sourced id, use `$recurs` to enable recursive mode :
   ```php
-  $client->profile->addList($source_id, $file_path, $is_recurs, $timestamp_reception, $training_metadata)
+  $client->profile->addList($source_id, $file_path, $is_recurs, $timestamp_reception, $training_metadata);
   ```
   It returns an array like: `result[filename] = server_reponse`.
   Can throw `RiminderApiProfileUploadException`
   * Get the profile information associated with both profile id and source id :
   ```php
-  $client->profile->get($profile_ident, $source_id)
+  $client->profile->get($profile_ident, $source_id);
   ```
   * Retrieve the profile documents associated with both profile id and source id :
   ```php
-  $client->profile->document->list($profile_ident, $source_id)
+  $client->profile->document->list($profile_ident, $source_id);
   ```
   * Retrieve the profile parsing data associated with both profile id and source id :
    ```php
-   $client->profile->parsing->get($profile_ident, $source_ident)
+   $client->profile->parsing->get($profile_ident, $source_ident);
    ```
   * Retrieve the profile scoring data associated with both profile id and source id :
    ```php
-   $client->profile->scoring->list($profile_ident, $source_id)
+   $client->profile->scoring->list($profile_ident, $source_id);
    ```
   * Edit the profile stage given a filter :
   ```php
-  $client->profile->stage->set($profile_ident, $source_id, $filter_ident, $rating)
+  $client->profile->stage->set($profile_ident, $source_id, $filter_ident, $rating);
   ```
   * Edit the profile rating given a filter :
   ```php
@@ -120,11 +120,11 @@ It's works the same way as profile.
 * # Sources
   * Get all sources for given team account:
   ```php
-  $client->source->list()
+  $client->source->list();
   ```
   * Get the source information associated with source id:
    ```php
-   $client->source->get($source_id)
+   $client->source->get($source_id);
    ```
 * # webhook
 This package supplies webhook support as well.

@@ -4,7 +4,7 @@
 
   class RiminderProfile
   {
-    const VALID_EXT = ['pdf', 'png', 'jpg', 'doc', 'docx', 'rtf', 'dotx'];
+    const VALID_EXT = ['pdf', 'png', 'jpg', 'jpeg', 'bmp', 'doc', 'docx', 'rtf', 'dotx', 'odt', 'odp', 'ppt', 'pptx', 'rtf', 'msg'];
     const INVALID_FILENAME = ['.', '..'];
 
     public function __construct($parent) {

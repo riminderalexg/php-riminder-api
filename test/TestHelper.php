@@ -104,7 +104,7 @@
       $encoded_sig = hash_hmac('sha256',$json_data, self::$WEBHOOKSECRET, true);
       $signature   = base64_encode($encoded_sig).".".base64_encode($json_data);
 
-      $res     = array('HTTP_RIMINDER_SIGNATURE' => $signature);
+      $res     = array('HTTP-RIMINDER-SIGNATURE' => $signature);
 
       return $res;
     }

@@ -5,6 +5,8 @@
    */
   class RiminderWebhook
   {
+    private const SIGNATURE_HEADER = 'HTTP-RIMINDER-SIGNATURE';
+
     public function __construct($parent) {
       $this->riminder = $parent;
       $this->handlers = [
@@ -81,11 +83,22 @@
       return $handler;
     }
 
-    public function handleRequest($encodedRequest) {
+    private function getEncodedHeader($data) {
+      if (is_array($data)) {
+        if (array_key_exists(self::SIGNATURE_HEADER, $data)) {
+          return $data[self::SIGNATURE_HEADER];
+        }
+        throw new \RiminderApiWebhookException("Error header does not contains ".self::SIGNATURE_HEADER);
+      }
+      return $data;
+    }
+
+    public function handleRequest($encodedHeader) {
       if (is_null($this->riminder->webhookSecret)) {
         throw new \RiminderApiArgumentException("No webhook secret.");
       }
-      $decoded_request = $this->decode_request($encodedRequest);
+      $encodedHeader = $this->getEncodedHeader($encodedHeader);
+      $decoded_request = $this->decode_request($encodedHeader);
 
       if (!array_key_exists('type', $decoded_request)) {
         throw new \RiminderApiWebhookException("Error: Invalid request: no 'type' field found.");

@@ -16,8 +16,10 @@
         RiminderEvents::PROFILE_SCORE_ERROR   => null,
         RiminderEvents::FILTER_TRAIN_SUCCESS  => null,
         RiminderEvents::FILTER_TRAIN_ERROR    => null,
+        RiminderEvents::FILTER_TRAIN_START    => null,
         RiminderEvents::FILTER_SCORE_SUCCESS  => null,
         RiminderEvents::FILTER_SCORE_ERROR    => null,
+        RiminderEvents::FILTER_SCORE_START    => null
       ];
     }
 

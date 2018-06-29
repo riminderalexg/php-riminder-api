@@ -143,7 +143,7 @@ final class RiminderTestProfile extends TestCase {
   private function getSomeProfileIdsPair($api) {
 
     $profile_ids = array();
-    $source_ids = $this->getSomeNotSharedSourceIds($api, ['api'], ['sdk_test']);
+    $source_ids = $this->getSomeNotSharedSourceIds($api, ['api'], TestHelper::getSourceTestName());
     $start =  new DateTime('2017-01-02');
     $end =  new DateTime();
 
@@ -158,7 +158,6 @@ final class RiminderTestProfile extends TestCase {
      { return $api->profile->list($args); };
 
       $profiles = TestHelper::useApiFuncWithReportedErr($this, $getProfiles);
-      // var_dump($profiles);
       foreach ($profiles['profiles'] as $profile) {
         $source = $profile['source'];
         $profile_ids[] = array('profile_id' => $profile['profile_id'],

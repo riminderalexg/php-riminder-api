@@ -62,8 +62,10 @@
       const PROFILE_SCORE_ERROR = 'profile.score.error';
       const FILTER_TRAIN_SUCCESS = 'filter.train.success';
       const FILTER_TRAIN_ERROR = 'filter.train.error';
+      const FILTER_TRAIN_START = 'filter.train.start';
       const FILTER_SCORE_SUCCESS = 'filter.score.success';
       const FILTER_SCORE_ERROR = 'filter.score.error';
+      const FILTER_SCORE_START = 'filter.score.start';
     }
   /**
    *

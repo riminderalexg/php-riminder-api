@@ -707,6 +707,40 @@ final class RiminderTestProfile extends TestCase {
       $this->assertEquals($resp['profile_reference'], $profile_ref);
   }
 
+  public function testPostProfile_metadata():void {
+      $api = new Riminder(TestHelper::getSecret());
+      $refKeys = array('profile_reference', 'file_id', 'file_name', 'file_size', 'extension', 'date_reception');
+      $now =  new DateTime();
+      $filterType = array('api');
+      $filterName = TestHelper::getSourceTestName();
+
+      $source_ids = $this->getSomeNotSharedSourceIds($api, $filterType, $filterName);
+      if (empty($source_ids)){
+        $this->markTestSkipped('no api sources with this key');
+      }
+      $filters = $api->filter->list();
+      $source_id = $source_ids[0];
+      $file = "./assets/test_cv7.jpg";
+      $profile_ref = strval(rand(0, 99999));
+      $profile_metadata = [
+        'filter_id' => $filters[0]['filter_id'],
+        'stage' => 'no',
+        'rating' => 2
+      ];
+
+      $addProfile = function () use ($api, $now, $source_id, $file, $profile_ref, $profile_metadata)
+      { return $api->profile->add($source_id, $file, $profile_ref, $now->getTimestamp(), $profile_metadata); };
+      $resp = TestHelper::useApiFuncWithReportedErr($this, $addProfile);
+      if (empty($resp)) {
+        $this->fail('No datas retrieved!');
+        return;
+      }
+      TestHelper::assertArrayHasKeys($this, $resp, $refKeys);
+      TestHelper::assertDateObj($this, $resp['date_reception']);
+      $this->assertEquals($resp['profile_reference'], $profile_ref);
+  }
+
+
   public function testPostProfiles():void {
       $api = new Riminder(TestHelper::getSecret());
       $refKeys = array('profile_reference', 'file_id', 'file_name', 'file_size', 'extension', 'date_reception');

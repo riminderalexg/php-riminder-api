@@ -58,9 +58,13 @@
           ]
         ];
         foreach ($bodyParams as $key => $value) {
+          $contents = $value;
+          if (is_array($value)) {
+            $contents = json_encode($value);
+          }
           $multipart['multipart'][] = [
             'name' => $key,
-            'contents' => $value
+            'contents' => $contents
           ];
         }
         $postLambda = function () use ($endpoint, $multipart) {

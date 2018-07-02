@@ -148,6 +148,27 @@ This package supplies webhook support as well.
   ```php
   $client->webhook->handleRequest($encoded_datas);
   ```
+  * Example on how to handle webhooks
+
+    ```php
+  	$client = new Riminder('api_key', 'webhook_key');
+
+  	// Set an handler for webhook event.
+  	$callback = function($event_name, $webhook_data) {
+      print($event_name);
+      var_dump($webhook_data);
+      }
+      // RiminderEvents contants can be use as well as string for event name
+      // for example here RiminderEvents::PROFILE_PARSE_SUCCESS can be replaced
+      // by 'profile.parse.success'
+  	$client->webhook->setHandler(RiminderEvents::PROFILE_PARSE_SUCCESS, $callback);
+
+  	// Get the header of the request sent by the webhook.
+  	$encoded_header = [HTTP-RIMINDER-SIGNATURE => 'some encoded datas'];
+
+      // Handle the webhook
+  	$client->webhook->handleRequest($encoded_header);
+    ```
 * # Constants
   * `RiminderFields` Contains to fill profile's `args` array for /profiles constants.
   * `RiminderStage`  Contains profile stage constants.
@@ -156,7 +177,6 @@ This package supplies webhook support as well.
   * `RiminderSeniority`  Contains profile seniority constants.
   * `RiminderTraining_metadata`  Contain metadata fields for profile adding constants.
   * `RiminderEvents` Constains event name for webhooks
-  * `RiminderEvents` Contains event names constans.
 * # Exception
   * `RiminderApiException` parent of all thrown exception. Thrown when an error occurs.
   * `RiminderApiResponseException` thrown when response http code is not a valid one.

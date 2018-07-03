@@ -908,5 +908,105 @@ final class RiminderTestProfile extends TestCase {
       $this->assertEquals($rating, $resp['rating']);
     }
 
+  private function getDataForProfileDataTest() {
+    $metadata = [
+          "train" => [
+            [
+              "filter_reference"  => "reference0",
+              "stage"             => None,
+              "stage_timestamp"   => None,
+              "rating"            => 2,
+              "rating_timestamp"  => 1530607434
+            ],
+            [
+              "filter_reference" => "reference1",
+              "stage"            => None,
+              "stage_timestamp"  => None,
+              "rating"           => 2,
+              "rating_timestamp" => 1530607434
+            ]
+          ]
+        ];
+
+        $profileData = [
+            "name" => "TESTRozé Baptiste",
+            "email" => "someone@someonelse.com",
+            "address" => "1 rue de somexhereelse",
+            "experiences" => [
+              [
+                "start" => "15/02/2018",
+                "end" => "1/06/2018",
+                "title" => "Advisor",
+                "company" => "PwC luxembourg",
+                "location" => "Paris",
+                "description" => "Doing IT integration and RPA"
+              ]
+            ],
+            "educations" => [
+              [
+                "start" => "2000",
+                "end" => "2018",
+                "title" => "Diplome d'ingénieur",
+                "school" => "UTT",
+                "description" => "Management des systèmes d'information",
+                "location" => "Mars"
+              ]
+            ],
+            "skills" => [
+              "manual skill",
+              "Creative spirit",
+              "Writing skills",
+              "Communication",
+              "Project management",
+              "French",
+              "German",
+              "Korean",
+              "English",
+              "Accounting",
+              "Human resources"
+            ]
+          ];
+        $res = ['data' => $profileData, 'meta' => $metadata];
+        return $res;
+  }
+
+  public function testDataAdd(): void {
+
+        $profile_ref = strval(rand(0, 99999));
+        $refKeys = array('profileData', 'profileMetaData');
+        $now =  new DateTime();
+        $filterType = array('api');
+        $filterName = TestHelper::getSourceTestName();
+        $datas = $this->getDataForProfileDataTest();
+        $metadata = $data['meta'];
+        $profileData = $data['data'];
+
+        $source_ids = $this->getSomeNotSharedSourceIds($api, $filterType, $filterName);
+        if (empty($source_ids)){
+          $this->markTestSkipped('no api sources with this key');
+        }
+        $source_id = $source_ids[0];
+        $addData = function () use ($api, $profileData, $metadata, $now, $profile_ref, $source_id)
+          {  return $api->profile->data->add($source_id, $profileData, $metadata, $profile_ref, $now); };
+
+        $resp = TestHelper::useApiFuncWithReportedErr($this, $addData);
+        TestHelper::assertArrayHasKeys($this, $resp, $refKeys);
+  }
+
+  public function testDataCheck(): void {
+
+        $profile_ref = strval(rand(0, 99999));
+        $refKeys = array('profileData', 'profileMetaData');
+        $datas = $this->getDataForProfileDataTest();
+        $metadata = $data['meta'];
+        $profileData = $data['data'];
+
+        $addData = function () use ($api, $profileData, $metadata, $profile_ref)
+          {  return $api->profile->data->check($profileData, $metadata, $profile_ref); };
+
+        $resp = TestHelper::useApiFuncWithReportedErr($this, $addData);
+        TestHelper::assertArrayHasKeys($this, $resp, $refKeys);
+  }
+
 }
  ?>

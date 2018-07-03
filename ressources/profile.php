@@ -14,6 +14,7 @@
       $this->scoring = new RiminderProfileScoring($parent);
       $this->parsing = new RiminderProfileParsing($parent);
       $this->document = new RiminderProfileDocument($parent);
+      $this->data = new RiminderProfileData($parent);
     }
 
     private static function is_extensionValid(string $file) {
@@ -253,4 +254,43 @@
 
   }
 
+  class RiminderProfileData
+  {
+    public function __construct($parent) {
+      $this->riminder = $parent;
+    }
+
+    public function check(array $profileData, array $profileMetadata=[], $profile_reference=null) {
+      if (!empty($profile_reference) && $profile_reference instanceof ProfileReference) {
+        $profile_reference = $profile_reference->getValue();
+      }
+
+      $bodyParams = array(
+        'profileData'       => $profileData,
+        'profileMetadata'   => $profileMetadata,
+        'profile_reference' => $profile_reference
+      );
+      $resp = $this->riminder->_rest->post("profile/data/check", $bodyParams);
+
+      return json_decode($resp->getBody(), true)['data'];
+    }
+
+    public function add(string $source_id, array $profileData, array $profileMetadata=[], $profile_reference=null, $timestamp_reception=null) {
+      if (!empty($profile_reference) && $profile_reference instanceof ProfileReference) {
+        $profile_reference = $profile_reference->getValue();
+      }
+      $timestamp_reception = RiminderProfile::argDateToTimestamp($timestamp_reception, 'timestamp_reception');
+
+      $bodyParams = array(
+        'source_id'           => $source_id,
+        'profileData'         => $profileData,
+        'profileMetadata'     => $profileMetadata,
+        'profile_reference'   => $profile_reference,
+        'timestamp_reception' => $timestamp_reception
+      );
+      $resp = $this->riminder->_rest->post("profile/data", $bodyParams);
+
+      return json_decode($resp->getBody(), true)['data'];
+    }
+}
  ?>

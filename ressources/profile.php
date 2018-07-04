@@ -261,21 +261,23 @@
     }
 
     public function check(array $profileData, array $profileMetadata=[], $profile_reference=null) {
+
       if (!empty($profile_reference) && $profile_reference instanceof ProfileReference) {
         $profile_reference = $profile_reference->getValue();
       }
 
       $bodyParams = array(
         'profileData'       => $profileData,
-        'profileMetadata'   => $profileMetadata,
-        'profile_reference' => $profile_reference
+        'profileMetadata'   => $profileMetadata
       );
+      RequestBodyUtils::add_if_not_null($bodyParams, 'profile_reference', $profile_reference);
       $resp = $this->riminder->_rest->post("profile/data/check", $bodyParams);
 
       return json_decode($resp->getBody(), true)['data'];
     }
 
     public function add(string $source_id, array $profileData, array $profileMetadata=[], $profile_reference=null, $timestamp_reception=null) {
+
       if (!empty($profile_reference) && $profile_reference instanceof ProfileReference) {
         $profile_reference = $profile_reference->getValue();
       }
@@ -284,10 +286,11 @@
       $bodyParams = array(
         'source_id'           => $source_id,
         'profileData'         => $profileData,
-        'profileMetadata'     => $profileMetadata,
-        'profile_reference'   => $profile_reference,
-        'timestamp_reception' => $timestamp_reception
+        'profileMetadata'     => $profileMetadata
       );
+
+      RequestBodyUtils::add_if_not_null($bodyParams, 'profile_reference', $profile_reference);
+      RequestBodyUtils::add_if_not_null($bodyParams, 'timestamp_reception', $timestamp_reception);
       $resp = $this->riminder->_rest->post("profile/data", $bodyParams);
 
       return json_decode($resp->getBody(), true)['data'];

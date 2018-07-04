@@ -85,11 +85,11 @@ It's works the same way as profile.
   ```
   * Add a resume to a sourced id :
   ```php
-  $client->profile->add($source_id, $file_path, $profile_reference, $timestamp_reception, $training_metadata);
+  $client->profile->add($source_id, $file_path, [$profile_reference, $timestamp_reception, $training_metadata]);
   ```
   * Add all resume from a directory to a sourced id, use `$recurs` to enable recursive mode :
   ```php
-  $client->profile->addList($source_id, $file_path, $is_recurs, $timestamp_reception, $training_metadata);
+  $client->profile->addList($source_id, $file_path, [$is_recurs, $timestamp_reception, $training_metadata]);
   ```
   It returns an array like: `result[filename] = server_reponse`.
   Can throw `RiminderApiProfileUploadException`
@@ -109,13 +109,21 @@ It's works the same way as profile.
    ```php
    $client->profile->scoring->list($profile_ident, $source_id);
    ```
-  * Edit the profile stage given a filter :
+  * Edit the profile stage of given a filter :
   ```php
   $client->profile->stage->set($profile_ident, $source_id, $filter_ident, $rating);
   ```
-  * Edit the profile rating given a filter :
+  * Edit the profile rating of given a filter :
   ```php
   $client->profile->rating->set($profile_ident, $source_id, $filter_ident, $rating)
+  ```
+  * Check if a parsed profile is valid
+  ```php
+  $client->profile->data->check($profileData, $profileMetadata, $profile_reference);
+  ```
+  * Add a parsed profile to the platform
+  ```php
+  $client->profile->data->add($source_id, $profileData, $profileMetadata, $profile_reference, $timestamp_reception);
   ```
 * # Sources
   * Get all sources for given team account:

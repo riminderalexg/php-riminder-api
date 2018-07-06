@@ -910,7 +910,6 @@ final class RiminderTestProfile extends TestCase {
 
   private function getDataForProfileDataTest() {
     $metadata = [
-          "train" => [
             [
               "filter_reference"  => "reference0",
               "stage"             => None,
@@ -925,11 +924,10 @@ final class RiminderTestProfile extends TestCase {
               "rating"           => 2,
               "rating_timestamp" => 1530607434
             ]
-          ]
-        ];
+          ];
 
         $profileData = [
-            "name" => "TESTRozé Baptiste",
+            "name" => "test superman",
             "email" => "someone@someonelse.com",
             "address" => "1 rue de somexhereelse",
             "experiences" => [
@@ -937,9 +935,9 @@ final class RiminderTestProfile extends TestCase {
                 "start" => "15/02/2018",
                 "end" => "1/06/2018",
                 "title" => "Advisor",
-                "company" => "PwC luxembourg",
+                "company" => "red apple corp",
                 "location" => "Paris",
-                "description" => "Doing IT integration and RPA"
+                "description" => "A ne pas confondre avec cyborg superman"
               ]
             ],
             "educations" => [
@@ -956,10 +954,10 @@ final class RiminderTestProfile extends TestCase {
               "manual skill",
               "Creative spirit",
               "Writing skills",
-              "Communication",
+              "World domination",
               "Project management",
               "French",
-              "German",
+              "Italian",
               "Korean",
               "English",
               "Accounting",

@@ -171,7 +171,6 @@ It's works the same way as profile.
   `$trainingMetadata` is a array of array like this:
   ```php
   $trainingMetadata = [
-        "train" => [
           [
             "filter_reference"  => "reference0",
             "stage"             => None,
@@ -186,8 +185,7 @@ It's works the same way as profile.
             "rating"           => 2,
             "rating_timestamp" => 1530607434
           ]
-        ]
-      ];
+        ];
   ```
 * # Sources
   * Get all sources for given team account:

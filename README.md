@@ -119,11 +119,75 @@ It's works the same way as profile.
   ```
   * Check if a parsed profile is valid
   ```php
-  $client->profile->data->check($profileData, $profileMetadata, $profile_reference);
+  $client->profile->data->check($profileData, $trainingMetadata);
   ```
   * Add a parsed profile to the platform
   ```php
-  $client->profile->data->add($source_id, $profileData, $profileMetadata, $profile_reference, $timestamp_reception);
+  $client->profile->data->add($source_id, $profileData, $trainingMetadata, $profile_reference, $timestamp_reception);
+  ```
+
+  `$profileData` is an array like this:
+  ```php
+  $profileData = [
+      "name" => "test persona",
+      "email" => "someone@someonelse.com",
+      "address" => "1 rue de somexhereelse",
+      "experiences" => [
+        [
+          "start" => "15/02/2018",
+          "end" => "1/06/2018",
+          "title" => "PDG",
+          "company" => "red apple corp",
+          "location" => "Paris",
+          "description" => "Doing IT integration and RPA"
+        ]
+      ],
+      "educations" => [
+        [
+          "start" => "2000",
+          "end" => "2018",
+          "title" => "Diplome d'ingénieur",
+          "school" => "UTT",
+          "description" => "Management des systèmes d'information",
+          "location" => "Mars"
+        ]
+      ],
+      "skills" => [
+        "manual skill",
+        "Creative spirit",
+        "Writing skills",
+        "World domination",
+        "Project management",
+        "French",
+        "Italian",
+        "Korean",
+        "English",
+        "Accounting",
+        "Human resources"
+      ]
+    ];
+  ```
+
+  `$trainingMetadata` is a array of array like this:
+  ```php
+  $trainingMetadata = [
+        "train" => [
+          [
+            "filter_reference"  => "reference0",
+            "stage"             => None,
+            "stage_timestamp"   => None,
+            "rating"            => 2,
+            "rating_timestamp"  => 1530607434
+          ],
+          [
+            "filter_reference" => "reference1",
+            "stage"            => None,
+            "stage_timestamp"  => None,
+            "rating"           => 2,
+            "rating_timestamp" => 1530607434
+          ]
+        ]
+      ];
   ```
 * # Sources
   * Get all sources for given team account:

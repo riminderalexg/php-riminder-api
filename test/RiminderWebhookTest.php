@@ -14,7 +14,7 @@ final class RiminderTestWebhook extends TestCase {
   static $decoded_request = null;
 
   static function reset_test_values() {
-    self::$zap = null;
+    self::$zap = 0;
     self::$lastType = null;
     self::$decoded_request = null;
   }
@@ -69,9 +69,24 @@ final class RiminderTestWebhook extends TestCase {
     $this->assertEquals(self::$zap, 1);
     $ref_keys = ['type', 'message', 'profile'];
     $profile_ref_keys = ['profile_id', 'profile_reference'];
+    $this->assertEquals(self::$lastType, null);
     TestHelper::assertArrayHasKeys($this, self::$decoded_request, $ref_keys);
     TestHelper::assertArrayHasKeys($this, self::$decoded_request['profile'], $profile_ref_keys);
   }
+
+  public function testwebhook_no_handler_one_arg() {
+    self::reset_test_values();
+    $api = new Riminder(TestHelper::getSecret(), TestHelper::getWebhookSecret());
+    $api->webhooks->setHandler(RiminderEvents::PROFILE_SCORE_ERROR, 'RiminderTestWebhook::change_zap2');
+    $encoded_req = TestHelper::generateWebhookRequest(RiminderEvents::PROFILE_PARSE_ERROR);
+    $api->webhooks->handle($encoded_req);
+    $ref_keys = ['type', 'message', 'profile'];
+    $profile_ref_keys = ['profile_id', 'profile_reference'];
+    $this->assertEquals(self::$zap, 0);
+    $this->assertEquals(self::$decoded_request, null);
+    $this->assertEquals(self::$lastType, null);
+  }
+
 
 
   public function testPostCheck(): void {

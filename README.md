@@ -224,6 +224,7 @@ This package supplies webhooks support as well.
   	$client = new Riminder('api_key', 'webhook_key');
 
   	// Set an handler for webhooks event.
+    // Event name argument is actually not mandatory
   	$callback = function($webhook_data, $event_name) {
       print($event_name);
       var_dump($webhook_data);

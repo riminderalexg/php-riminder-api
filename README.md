@@ -196,48 +196,48 @@ It's works the same way as profile.
    ```php
    $client->source->get($source_id);
    ```
-* # webhook
-This package supplies webhook support as well.
-  * Check for webhook integration:
+* # webhooks
+This package supplies webhooks support as well.
+  * Check for webhooks integration:
   ```php
-  $client->webhook->check();
+  $client->webhooks->check();
   ```
   * Set an handler for an event (listed with RiminderEvents constants)
   ```php
-  $client->webhook->setHandler($eventName, $callback);
+  $client->webhooks->setHandler($eventName, $callback);
   ```
   * Check if the event has an handler
   ```php
-  $client->webhook->isHandlerPresent($eventName);
+  $client->webhooks->isHandlerPresent($eventName);
   ```
   * Remove handler for an event
   ```php
-  $client->webhook->removeHandler($eventName);
+  $client->webhooks->removeHandler($eventName);
   ```
-  * Handle the incoming webhook request, you need to put as argument HTTP_RIMINDER_SIGNATURE as an argument.
+  * Handle the incoming webhooks request, you need to put as argument HTTP_RIMINDER_SIGNATURE as an argument.
   ```php
-  $client->webhook->handleRequest($encoded_datas);
+  $client->webhooks->handle($encoded_datas);
   ```
   * Example on how to handle webhooks
 
     ```php
   	$client = new Riminder('api_key', 'webhook_key');
 
-  	// Set an handler for webhook event.
-  	$callback = function($event_name, $webhook_data) {
+  	// Set an handler for webhooks event.
+  	$callback = function($webhook_data, $event_name) {
       print($event_name);
       var_dump($webhook_data);
       }
       // RiminderEvents contants can be use as well as string for event name
       // for example here RiminderEvents::PROFILE_PARSE_SUCCESS can be replaced
       // by 'profile.parse.success'
-  	$client->webhook->setHandler(RiminderEvents::PROFILE_PARSE_SUCCESS, $callback);
+  	$client->webhooks->setHandler(RiminderEvents::PROFILE_PARSE_SUCCESS, $callback);
 
   	// Get the header of the request sent by the webhook.
   	$encoded_header = [HTTP-RIMINDER-SIGNATURE => 'some encoded datas'];
 
       // Handle the webhook
-  	$client->webhook->handleRequest($encoded_header);
+  	$client->webhooks->handle($encoded_header);
     ```
 * # Constants
   * `RiminderFields` Contains to fill profile's `args` array for /profiles constants.

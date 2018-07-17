@@ -95,7 +95,7 @@
       return $data;
     }
 
-    public function handleRequest($encodedHeader) {
+    public function handle($encodedHeader) {
       if (is_null($this->riminder->webhookSecret)) {
         throw new \RiminderApiArgumentException("No webhook secret.");
       }
@@ -110,7 +110,7 @@
         return;
       }
 
-      $handler($decoded_request['type'], $decoded_request);
+      $handler($decoded_request, $decoded_request['type']);
     }
   }
 

@@ -912,15 +912,15 @@ final class RiminderTestProfile extends TestCase {
     $metadata = [
             [
               "filter_reference"  => "reference0",
-              "stage"             => None,
-              "stage_timestamp"   => None,
+              "stage"             => null,
+              "stage_timestamp"   => null,
               "rating"            => 2,
               "rating_timestamp"  => 1530607434
             ],
             [
               "filter_reference" => "reference1",
-              "stage"            => None,
-              "stage_timestamp"  => None,
+              "stage"            => null,
+              "stage_timestamp"  => null,
               "rating"           => 2,
               "rating_timestamp" => 1530607434
             ]
@@ -970,14 +970,15 @@ final class RiminderTestProfile extends TestCase {
 
   public function testDataAdd(): void {
 
+        $api = new Riminder(TestHelper::getSecret());
         $profile_ref = strval(rand(0, 99999));
         $refKeys = array('profileData', 'profileMetaData');
         $now =  new DateTime();
         $filterType = array('api');
         $filterName = TestHelper::getSourceTestName();
         $datas = $this->getDataForProfileDataTest();
-        $metadata = $data['meta'];
-        $profileData = $data['data'];
+        $metadata = $datas['meta'];
+        $profileData = $datas['data'];
 
         $source_ids = $this->getSomeNotSharedSourceIds($api, $filterType, $filterName);
         if (empty($source_ids)){
@@ -993,11 +994,12 @@ final class RiminderTestProfile extends TestCase {
 
   public function testDataCheck(): void {
 
+        $api = new Riminder(TestHelper::getSecret());
         $profile_ref = strval(rand(0, 99999));
         $refKeys = array('profileData', 'profileMetaData');
         $datas = $this->getDataForProfileDataTest();
-        $metadata = $data['meta'];
-        $profileData = $data['data'];
+        $metadata = $datas['meta'];
+        $profileData = $datas['data'];
 
         $addData = function () use ($api, $profileData, $metadata, $profile_ref)
           {  return $api->profile->data->check($profileData, $metadata, $profile_ref); };

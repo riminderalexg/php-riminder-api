@@ -23,7 +23,7 @@ class Riminder
     $this->filter   = new RiminderFilter($this);
     $this->profile  = new RiminderProfile($this);
     $this->source   = new RiminderSource($this);
-    $this->webhook  = new RiminderWebhook($this);
+    $this->webhooks  = new RiminderWebhook($this);
   }
 
 }

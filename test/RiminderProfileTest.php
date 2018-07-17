@@ -972,7 +972,7 @@ final class RiminderTestProfile extends TestCase {
 
         $api = new Riminder(TestHelper::getSecret());
         $profile_ref = strval(rand(0, 99999));
-        $refKeys = array('profileData', 'profileMetaData');
+        $refKeys = array('profile_json', 'training_metadata');
         $now =  new DateTime();
         $filterType = array('api');
         $filterName = TestHelper::getSourceTestName();
@@ -996,7 +996,7 @@ final class RiminderTestProfile extends TestCase {
 
         $api = new Riminder(TestHelper::getSecret());
         $profile_ref = strval(rand(0, 99999));
-        $refKeys = array('profileData', 'profileMetaData');
+        $refKeys = array('profile_json', 'training_metadata');
         $datas = $this->getDataForProfileDataTest();
         $metadata = $datas['meta'];
         $profileData = $datas['data'];

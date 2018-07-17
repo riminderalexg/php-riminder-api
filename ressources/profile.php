@@ -63,7 +63,7 @@
       return($res);
     }
 
-    private static function argDateToTimestamp($date, $argName = 'arg') {
+    static function argDateToTimestamp($date, $argName = 'arg') {
 
       if (is_int($date)){
         return $date;

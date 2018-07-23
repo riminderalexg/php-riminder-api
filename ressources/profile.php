@@ -6,6 +6,7 @@
   {
     const VALID_EXT = ['pdf', 'png', 'jpg', 'jpeg', 'bmp', 'doc', 'docx', 'rtf', 'dotx', 'odt', 'odp', 'ppt', 'pptx', 'rtf', 'msg'];
     const INVALID_FILENAME = ['.', '..'];
+    const METADATA_MANDATORY_FIELD = ['filter_reference', 'stage', 'stage_timestamp', 'rating', 'rating_timestamp'];
 
     public function __construct($parent) {
       $this->riminder = $parent;
@@ -14,7 +15,25 @@
       $this->scoring = new RiminderProfileScoring($parent);
       $this->parsing = new RiminderProfileParsing($parent);
       $this->document = new RiminderProfileDocument($parent);
-      $this->data = new RiminderProfileData($parent);
+      $this->json = new RiminderProfileJson($parent);
+    }
+
+    public static function assert_training_metadata_valid($metadatas) {
+      if (is_null($metadatas)) {
+        return true;
+      }
+      if (!is_array($metadatas)) {
+        $mess = "Training metadatas have to be a list of object.";
+        throw new \RiminderApiArgumentException($mess, 1);
+      }
+      foreach ($metadatas as $metadata) {
+        foreach (self::METADATA_MANDATORY_FIELD as $mandat_field) {
+          if (!array_key_exists($mandat_field, $metadata))
+            $mess = $mandat_field." is mandatory for training metadata.";
+            throw new \RiminderApiArgumentException($mess, 1);
+        }
+      }
+      return true;
     }
 
     private static function is_extensionValid(string $file) {
@@ -100,6 +119,7 @@
       if (!empty($profile_reference) && $profile_reference instanceof ProfileReference) {
         $profile_reference = $profile_reference->getValue();
       }
+      self::assert_training_metadata_valid($training_metadata);
       RequestBodyUtils::add_if_not_null($bodyParams, 'training_metadata', $training_metadata);
       RequestBodyUtils::add_if_not_null($bodyParams, 'profile_reference', $profile_reference);
       RequestBodyUtils::add_if_not_null($bodyParams, 'timestamp_reception', $reception_date);
@@ -254,7 +274,7 @@
 
   }
 
-  class RiminderProfileData
+  class RiminderProfileJson
   {
     public function __construct($parent) {
       $this->riminder = $parent;
@@ -262,6 +282,7 @@
 
     public function check(array $profileData, array $trainingMetadata=[]) {
 
+      RiminderProfile::assert_training_metadata_valid($training_metadata);
       $bodyParams = array(
         'profile_json'       => $profileData,
         'training_metadata'  => $trainingMetadata
@@ -273,6 +294,7 @@
 
     public function add(string $source_id, array $profileData, array $trainingMetadata=[], $profile_reference=null, $timestamp_reception=null) {
 
+      RiminderProfile::assert_training_metadata_valid($training_metadata);
       if (!empty($profile_reference) && $profile_reference instanceof ProfileReference) {
         $profile_reference = $profile_reference->getValue();
       }

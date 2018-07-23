@@ -722,11 +722,11 @@ final class RiminderTestProfile extends TestCase {
       $source_id = $source_ids[0];
       $file = "./assets/test_cv7.jpg";
       $profile_ref = strval(rand(0, 99999));
-      $profile_metadata = [
-        'filter_id' => $filters[0]['filter_id'],
+      $profile_metadata = [[
+        'filter_reference' => $filters[0]['filter_reference'],
         'stage' => 'no',
         'rating' => 2
-      ];
+      ]];
 
       $addProfile = function () use ($api, $now, $source_id, $file, $profile_ref, $profile_metadata)
       { return $api->profile->add($source_id, $file, $profile_ref, $now->getTimestamp(), $profile_metadata); };
@@ -968,7 +968,7 @@ final class RiminderTestProfile extends TestCase {
         return $res;
   }
 
-  public function testDataAdd(): void {
+  public function testJsonAdd(): void {
 
         $api = new Riminder(TestHelper::getSecret());
         $profile_ref = strval(rand(0, 99999));
@@ -986,13 +986,38 @@ final class RiminderTestProfile extends TestCase {
         }
         $source_id = $source_ids[0];
         $addData = function () use ($api, $profileData, $metadata, $now, $profile_ref, $source_id)
-          {  return $api->profile->data->add($source_id, $profileData, $metadata, $profile_ref, $now); };
+          {  return $api->profile->json->add($source_id, $profileData, $metadata, $profile_ref, $now); };
 
         $resp = TestHelper::useApiFuncWithReportedErr($this, $addData);
         TestHelper::assertArrayHasKeys($this, $resp, $refKeys);
   }
 
-  public function testDataCheck(): void {
+  public function testJsonAdd_bad_metadata(): void {
+
+        $api = new Riminder(TestHelper::getSecret());
+        $profile_ref = strval(rand(0, 99999));
+        $refKeys = array('profile_json', 'training_metadata');
+        $now =  new DateTime();
+        $filterType = array('api');
+        $filterName = TestHelper::getSourceTestName();
+        $datas = $this->getDataForProfileDataTest();
+        $metadata = $datas['meta'];
+        unset($metadata[0]['filter_reference']);
+        $profileData = $datas['data'];
+
+        $source_ids = $this->getSomeNotSharedSourceIds($api, $filterType, $filterName);
+        if (empty($source_ids)){
+          $this->markTestSkipped('no api sources with this key');
+        }
+        $source_id = $source_ids[0];
+        $addData = function () use ($api, $profileData, $metadata, $now, $profile_ref, $source_id)
+          {  return $api->profile->json->add($source_id, $profileData, $metadata, $profile_ref, $now); };
+
+        $resp = TestHelper::useApiFuncWithExpectedErr($this, $addData, 'RiminderApiArgumentException');
+        TestHelper::assertArrayHasKeys($this, $resp, $refKeys);
+  }
+
+  public function testJsonCheck(): void {
 
         $api = new Riminder(TestHelper::getSecret());
         $profile_ref = strval(rand(0, 99999));
@@ -1002,7 +1027,7 @@ final class RiminderTestProfile extends TestCase {
         $profileData = $datas['data'];
 
         $addData = function () use ($api, $profileData, $metadata, $profile_ref)
-          {  return $api->profile->data->check($profileData, $metadata, $profile_ref); };
+          {  return $api->profile->json->check($profileData, $metadata, $profile_ref); };
 
         $resp = TestHelper::useApiFuncWithReportedErr($this, $addData);
         TestHelper::assertArrayHasKeys($this, $resp, $refKeys);

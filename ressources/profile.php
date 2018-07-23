@@ -266,7 +266,7 @@
         'profile_json'       => $profileData,
         'training_metadata'  => $trainingMetadata
       );
-      $resp = $this->riminder->_rest->post("profile/data/check", $bodyParams);
+      $resp = $this->riminder->_rest->post("profile/json/check", $bodyParams);
 
       return json_decode($resp->getBody(), true)['data'];
     }
@@ -286,7 +286,7 @@
 
       RequestBodyUtils::add_if_not_null($bodyParams, 'profile_reference', $profile_reference);
       RequestBodyUtils::add_if_not_null($bodyParams, 'timestamp_reception', $timestamp_reception);
-      $resp = $this->riminder->_rest->post("profile/data", $bodyParams);
+      $resp = $this->riminder->_rest->post("profile/json", $bodyParams);
 
       return json_decode($resp->getBody(), true)['data'];
     }

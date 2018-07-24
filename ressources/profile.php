@@ -28,9 +28,10 @@
       }
       foreach ($metadatas as $metadata) {
         foreach (self::METADATA_MANDATORY_FIELD as $mandat_field) {
-          if (!array_key_exists($mandat_field, $metadata))
+          if (!array_key_exists($mandat_field, $metadata)) {
             $mess = $mandat_field." is mandatory for training metadata.";
             throw new \RiminderApiArgumentException($mess, 1);
+          }
         }
       }
       return true;
@@ -85,13 +86,16 @@
     static function argDateToTimestamp($date, $argName = 'arg') {
 
       if (is_int($date)){
+        return strval($date);
+      }
+      if (is_string($date) && intval($date) != 0) {
         return $date;
       }
       if (!($date instanceof DateTime)) {
         $mess = $argName.' is not a valid date.';
         throw new \RiminderApiArgumentException($mess, 1);
       }
-      return $date->getTimestamp();
+      return strval($date->getTimestamp());
     }
 
     private static function assert_querykey_exist(array $query, string $key) {
@@ -282,7 +286,7 @@
 
     public function check(array $profileData, array $trainingMetadata=[]) {
 
-      RiminderProfile::assert_training_metadata_valid($training_metadata);
+      RiminderProfile::assert_training_metadata_valid($trainingMetadata);
       $bodyParams = array(
         'profile_json'       => $profileData,
         'training_metadata'  => $trainingMetadata
@@ -294,7 +298,7 @@
 
     public function add(string $source_id, array $profileData, array $trainingMetadata=[], $profile_reference=null, $timestamp_reception=null) {
 
-      RiminderProfile::assert_training_metadata_valid($training_metadata);
+      RiminderProfile::assert_training_metadata_valid($trainingMetadata);
       if (!empty($profile_reference) && $profile_reference instanceof ProfileReference) {
         $profile_reference = $profile_reference->getValue();
       }

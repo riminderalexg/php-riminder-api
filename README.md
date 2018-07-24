@@ -119,11 +119,11 @@ It's works the same way as profile.
   ```
   * Check if a parsed profile is valid
   ```php
-  $client->profile->data->check($profileData, $trainingMetadata);
+  $client->profile->json->check($profileData, $trainingMetadata);
   ```
   * Add a parsed profile to the platform
   ```php
-  $client->profile->data->add($source_id, $profileData, $trainingMetadata, $profile_reference, $timestamp_reception);
+  $client->profile->json->add($source_id, $profileData, $trainingMetadata, $profile_reference, $timestamp_reception);
   ```
 
   `$profileData` is an array like this:

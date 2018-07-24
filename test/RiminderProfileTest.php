@@ -724,7 +724,9 @@ final class RiminderTestProfile extends TestCase {
       $profile_ref = strval(rand(0, 99999));
       $profile_metadata = [[
         'filter_reference' => $filters[0]['filter_reference'],
+        'stage_timestamp' => $now->getTimestamp(),
         'stage' => 'no',
+        'rating_timestamp' => $now->getTimestamp(),
         'rating' => 2
       ]];
 
@@ -1013,8 +1015,7 @@ final class RiminderTestProfile extends TestCase {
         $addData = function () use ($api, $profileData, $metadata, $now, $profile_ref, $source_id)
           {  return $api->profile->json->add($source_id, $profileData, $metadata, $profile_ref, $now); };
 
-        $resp = TestHelper::useApiFuncWithExpectedErr($this, $addData, 'RiminderApiArgumentException');
-        TestHelper::assertArrayHasKeys($this, $resp, $refKeys);
+        TestHelper::useApiFuncWithExpectedErr($this, $addData, 'RiminderApiArgumentException');
   }
 
   public function testJsonCheck(): void {

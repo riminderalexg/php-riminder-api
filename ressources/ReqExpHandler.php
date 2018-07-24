@@ -1,6 +1,6 @@
 <?php
   /**
-   *
+   * Handler for request problems.
    */
   require_once 'RiminderApiException.php';
 
@@ -15,6 +15,7 @@
          $httpcode = $e->getResponse()->getStatusCode();
          $httpreason = $e->getResponse()->getReasonPhrase();
          $url = $e->getRequest()->getUri();
+         
          if (!empty($e->getResponse()->getBody())) {
            $body = json_decode($e->getResponse()->getBody(), true);
            $httpreason = $httpreason.': '.$body['message'];

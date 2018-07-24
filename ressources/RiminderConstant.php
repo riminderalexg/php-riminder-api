@@ -10,10 +10,10 @@
     class RiminderStage
     {
       const ALL   = null;
-      const NEW   = 'new';
-      const YES   = 'yes';
-      const LATER = 'later';
-      const NO    = 'no';
+      const NEW   = 'NEW';
+      const YES   = 'YES';
+      const LATER = 'LATER';
+      const NO    = 'NO';
     }
 
     class RiminderSortBy

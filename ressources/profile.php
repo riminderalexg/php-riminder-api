@@ -22,12 +22,14 @@
       if (is_null($metadatas)) {
         return true;
       }
+      // TODO: check if it is a list (C style)
       if (!is_array($metadatas)) {
         $mess = "Training metadatas have to be a list of object.";
         throw new \RiminderApiArgumentException($mess, 1);
       }
       foreach ($metadatas as $metadata) {
         foreach (self::METADATA_MANDATORY_FIELD as $mandat_field) {
+
           if (!array_key_exists($mandat_field, $metadata)) {
             $mess = $mandat_field." is mandatory for training metadata.";
             throw new \RiminderApiArgumentException($mess, 1);
@@ -55,12 +57,16 @@
       return $res;
     }
 
+    // GetFileToSend scan all file in directory and get potential
+    // resume paths and return them
     private static function getFileToSend($path, $recurs) {
       $dir_paths = scandir($path);
       $res = [];
 
       foreach ($dir_paths as $dir_path) {
         $true_path = self::join_2_path($path, $dir_path);
+
+        // when $recurs is true check in subdir
         if (is_dir($true_path) && $recurs) {
             if (!in_array($dir_path, self::INVALID_FILENAME)){
               $res = array_merge($res, self::getFileToSend($true_path, $recurs));
@@ -98,6 +104,7 @@
       return strval($date->getTimestamp());
     }
 
+    // Check if key is present in query or throw an error
     private static function assert_querykey_exist(array $query, string $key) {
       if (!array_key_exists($key, $query)) {
         throw new \RiminderApiArgumentException($key." is absent and mandatory from query.", 1);
@@ -112,26 +119,31 @@
       $query['source_ids'] = RiminderProfile::serializeSourceIds($query['source_ids']);
       $query['date_start'] = RiminderProfile::argDateToTimestamp($query['date_start']);
       $query['date_end'] = RiminderProfile::argDateToTimestamp($query['date_end']);
+
       $resp = $this->riminder->_rest->get("profiles", $query);
       return json_decode($resp->getBody(), true)['data'];
     }
 
     public function add(string $source_id, string $file_path, $profile_reference=null, $reception_date=null, $training_metadata=null) {
-      $bodyParams = array (
-        'source_id'           => $source_id
-      );
+
+      // ensure that profile reference is a string
+      // cause it can be a ProfileReference object or a string
       if (!empty($profile_reference) && $profile_reference instanceof ProfileReference) {
         $profile_reference = $profile_reference->getValue();
       }
       self::assert_training_metadata_valid($training_metadata);
+
+      $bodyParams = array (
+        'source_id'           => $source_id
+      );
       RequestBodyUtils::add_if_not_null($bodyParams, 'training_metadata', $training_metadata);
       RequestBodyUtils::add_if_not_null($bodyParams, 'profile_reference', $profile_reference);
       RequestBodyUtils::add_if_not_null($bodyParams, 'timestamp_reception', $reception_date);
       if (array_key_exists('timestamp_reception', $bodyParams)){
         $bodyParams['timestamp_reception'] =  RiminderProfile::argDateToTimestamp($reception_date, 'reception_date');
       }
-      $resp = $this->riminder->_rest->postFile("profile", $bodyParams, $file_path);
 
+      $resp = $this->riminder->_rest->postFile("profile", $bodyParams, $file_path);
       return json_decode($resp->getBody(), true)['data'];
     }
 
@@ -151,6 +163,8 @@
           $failed_files[$file_path] = $e;
         }
       }
+      // If at least a file failed there is an exp,
+      // the exp contains list of suceed file too
       if (!empty($failed_files)) {
         throw new \RiminderApiProfileUploadException($failed_files, $succeed_files);
       }

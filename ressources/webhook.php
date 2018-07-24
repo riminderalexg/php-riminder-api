@@ -29,6 +29,7 @@
       return json_decode($resp->getBody(), true);
     }
 
+    // Add an handler for a given event.
     public function setHandler($eventName, $callback) {
       if (!array_key_exists($eventName, $this->handlers)){
         throw new \RiminderApiArgumentException($eventName." is not a valid event.");

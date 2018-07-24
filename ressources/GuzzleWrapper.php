@@ -16,6 +16,8 @@
       $this->base_url = $base_url;
     }
 
+    // Usage of lambda to execute the call, to handle transfert/ response
+    // errors easily see ReqExpHandler::exec
     public function get($endpoint, $query=null)
     {
         $tmp = [];
@@ -57,6 +59,8 @@
             ]
           ]
         ];
+
+        // Add other datas as multipart field.
         foreach ($bodyParams as $key => $value) {
           $contents = $value;
           if (is_array($value)) {
@@ -67,6 +71,7 @@
             'contents' => $contents
           ];
         }
+        
         $postLambda = function () use ($endpoint, $multipart) {
           return $this->guzzleClient->post($endpoint, $multipart);
         };

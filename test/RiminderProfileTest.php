@@ -921,8 +921,8 @@ final class RiminderTestProfile extends TestCase {
             ],
             [
               "filter_reference" => "reference1",
-              "stage"            => null,
-              "stage_timestamp"  => null,
+              "stage"            => "NO",
+              "stage_timestamp"  => 1530607434,
               "rating"           => 2,
               "rating_timestamp" => 1530607434
             ]
@@ -1005,6 +1005,30 @@ final class RiminderTestProfile extends TestCase {
         $datas = $this->getDataForProfileDataTest();
         $metadata = $datas['meta'];
         unset($metadata[0]['filter_reference']);
+        $profileData = $datas['data'];
+
+        $source_ids = $this->getSomeNotSharedSourceIds($api, $filterType, $filterName);
+        if (empty($source_ids)){
+          $this->markTestSkipped('no api sources with this key');
+        }
+        $source_id = $source_ids[0];
+        $addData = function () use ($api, $profileData, $metadata, $now, $profile_ref, $source_id)
+          {  return $api->profile->json->add($source_id, $profileData, $metadata, $profile_ref, $now); };
+
+        TestHelper::useApiFuncWithExpectedErr($this, $addData, 'RiminderApiArgumentException');
+  }
+
+  public function testJsonAdd_bad_metadata_null_filter_ref(): void {
+
+        $api = new Riminder(TestHelper::getSecret());
+        $profile_ref = strval(rand(0, 99999));
+        $refKeys = array('profile_json', 'training_metadata');
+        $now =  new DateTime();
+        $filterType = array('api');
+        $filterName = TestHelper::getSourceTestName();
+        $datas = $this->getDataForProfileDataTest();
+        $metadata = $datas['meta'];
+        $metadata[0]['filter_reference'] = null;
         $profileData = $datas['data'];
 
         $source_ids = $this->getSomeNotSharedSourceIds($api, $filterType, $filterName);

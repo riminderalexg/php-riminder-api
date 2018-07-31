@@ -19,7 +19,11 @@
         RiminderEvents::FILTER_TRAIN_START    => null,
         RiminderEvents::FILTER_SCORE_SUCCESS  => null,
         RiminderEvents::FILTER_SCORE_ERROR    => null,
-        RiminderEvents::FILTER_SCORE_START    => null
+        RiminderEvents::FILTER_SCORE_START    => null,
+        RiminderEvents::ACTION_STAGE_SUCCESS  => null,
+        RiminderEvents::ACTION_STAGE_ERROR    => null,
+        RiminderEvents::ACTION_RATING_SUCCESS => null,
+        RiminderEvents::ACTION_RATING_ERROR   => null
       ];
     }
 

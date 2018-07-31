@@ -66,6 +66,10 @@
       const FILTER_SCORE_SUCCESS = 'filter.score.success';
       const FILTER_SCORE_ERROR = 'filter.score.error';
       const FILTER_SCORE_START = 'filter.score.start';
+      const ACTION_STAGE_SUCCESS = 'action.stage.success';
+      const ACTION_STAGE_ERROR = 'action.stage.error';
+      const ACTION_RATING_SUCCESS = 'action.rating.success';
+      const ACTION_RATING_ERROR = 'action.rating.error';
     }
   /**
    *

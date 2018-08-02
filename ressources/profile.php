@@ -277,7 +277,7 @@
       );
 
       RequestBodyUtils::add_if_not_null($bodyParams, 'profile_reference', $profile_reference);
-      RequestBodyUtils::add_if_not_null($bodyParams, 'timestamp_reception', $timestamp_reception);
+      RequestBodyUtils::add_if_not_null($bodyParams['profile_json'], 'timestamp_reception', $timestamp_reception);
       $resp = $this->riminder->_rest->post("profile/json", $bodyParams);
 
       return json_decode($resp->getBody(), true)['data'];

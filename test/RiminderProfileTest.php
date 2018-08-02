@@ -930,15 +930,22 @@ final class RiminderTestProfile extends TestCase {
 
         $profileData = [
             "name" => "test superman",
+            "phone" => "+33689657412",
             "email" => "someone@someonelse.com",
-            "address" => "1 rue de somexhereelse",
+            "location_details" => [
+              "text" => "1 rue de somexhereelse",
+            ],
+            "summary" => "I'm not just a test I'm the REEL superman!!!!",
             "experiences" => [
               [
                 "start" => "15/02/2018",
                 "end" => "1/06/2018",
                 "title" => "Advisor",
                 "company" => "red apple corp",
-                "location" => "Paris",
+                "location_details" => [
+                  "text" => "23 rue du buggle, Metropolis",
+                ],
+                "location" => null,
                 "description" => "A ne pas confondre avec cyborg superman"
               ]
             ],
@@ -949,7 +956,10 @@ final class RiminderTestProfile extends TestCase {
                 "title" => "Diplome d'ingénieur",
                 "school" => "UTT",
                 "description" => "Management des systèmes d'information",
-                "location" => "Mars"
+                "location_details" => [
+                  "text" => "Orbite terre 0",
+                ],
+                "location" => null,
               ]
             ],
             "skills" => [
@@ -964,7 +974,21 @@ final class RiminderTestProfile extends TestCase {
               "English",
               "Accounting",
               "Human resources"
-            ]
+            ],
+            "interests" => [
+               "World saving",
+               "Journalisme",
+               "Go back in time",
+               "Lois"
+            ],
+           "urls" => [
+               "from_resume" => [],
+               'linkedin' => "",
+               'twitter' => "",
+               'facebook' => "",
+               'github' => "https://github.com/TESTSomone",
+               'picture' => ""
+           ]
           ];
         $res = ['data' => $profileData, 'meta' => $metadata];
         return $res;

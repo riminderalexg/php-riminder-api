@@ -934,6 +934,9 @@ final class RiminderTestProfile extends TestCase {
             "email" => "someone@someonelse.com",
             "location_details" => [
               "text" => "1 rue de somexhereelse",
+              "lat"  => null,
+              "lng"  => null,
+              "gmaps" => null,
             ],
             "summary" => "I'm not just a test I'm the REEL superman!!!!",
             "experiences" => [
@@ -944,6 +947,9 @@ final class RiminderTestProfile extends TestCase {
                 "company" => "red apple corp",
                 "location_details" => [
                   "text" => "23 rue du buggle, Metropolis",
+                  "lat"  => null,
+                  "lng"  => null,
+                  "gmaps" => null,
                 ],
                 "location" => null,
                 "description" => "A ne pas confondre avec cyborg superman"
@@ -958,6 +964,9 @@ final class RiminderTestProfile extends TestCase {
                 "description" => "Management des systèmes d'information",
                 "location_details" => [
                   "text" => "Orbite terre 0",
+                  "lat"  => null,
+                  "lng"  => null,
+                  "gmaps" => null,
                 ],
                 "location" => null,
               ]
